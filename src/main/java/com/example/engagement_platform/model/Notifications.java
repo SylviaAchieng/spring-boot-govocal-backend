@@ -30,4 +30,8 @@ public class Notifications {
     @NotBlank(message = "sentAt field shld not be empty")
     private String sentAt;
 
+    @NotNull(message = "status  is mandatory")
+    @NotBlank(message = "status field shld not be empty")
+    private String status;
+
 }

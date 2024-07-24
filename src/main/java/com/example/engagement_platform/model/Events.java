@@ -24,7 +24,7 @@ public class Events {
 
     @NotNull(message = "event description is mandatory")
     @NotBlank(message = "Description field shld not be empty")
-    private String Description;
+    private String description;
 
     @NotNull(message = "event creation date is mandatory")
     @NotBlank(message = "createdAt field shld not be empty")
