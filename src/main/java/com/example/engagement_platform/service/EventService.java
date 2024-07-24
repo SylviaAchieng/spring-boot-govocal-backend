@@ -10,4 +10,8 @@ public interface EventService {
     Events createEvent(Events events);
 
     Events getEventById(Long eventId);
+
+    void deleteEventById(Long eventId);
+
+    void updateEventById(Events events, Long eventId);
 }

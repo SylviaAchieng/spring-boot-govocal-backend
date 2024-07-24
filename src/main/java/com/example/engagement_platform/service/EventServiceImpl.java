@@ -34,4 +34,24 @@ public class EventServiceImpl implements EventService{
         }
     }
 
+    @Override
+    public void deleteEventById(Long eventId) {
+        Optional<Events> eventFrDb = eventRepository.findById(eventId);
+        if (eventFrDb.isPresent()){
+            eventRepository.deleteById(eventId);
+        }else{
+            throw new RuntimeException("Event not found");
+        }
+    }
+
+    @Override
+    public void updateEventById(Events events, Long eventId) {
+        Optional<Events> eventFrDatabase = eventRepository.findById(eventId);
+        if (eventFrDatabase.isPresent()){
+            eventRepository.save(events);
+        }else {
+            throw new RuntimeException("Event not found");
+        }
+    }
+
 }

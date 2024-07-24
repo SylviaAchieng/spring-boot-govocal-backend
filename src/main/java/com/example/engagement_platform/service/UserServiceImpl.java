@@ -51,6 +51,8 @@ public class UserServiceImpl implements UserService{
         Optional<Users> updateUser = userRepository.findById(userId);
         if (updateUser.isPresent()){
             userRepository.save(users);
+        }else{
+            throw new RuntimeException("user not found");
         }
     }
 

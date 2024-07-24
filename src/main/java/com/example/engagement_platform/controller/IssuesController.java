@@ -1,7 +1,9 @@
 package com.example.engagement_platform.controller;
 
 import com.example.engagement_platform.model.Events;
+import com.example.engagement_platform.model.Issues;
 import com.example.engagement_platform.service.EventService;
+import com.example.engagement_platform.service.IssuesService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,57 +13,57 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/events")
-public class EventController {
+@RequestMapping("/api/v1/issues")
+public class IssuesController {
 
     @Autowired
-    private EventService eventService;
+    private IssuesService issuesService;
 
     @GetMapping
-    public ResponseEntity<List<Events>> getAllEvents(){
+    public ResponseEntity<List<Issues>> getAllIssues(){
         try {
-            List<Events> events = eventService.getAllEvents();
-            return new ResponseEntity<>(events, HttpStatus.OK);
+            List<Issues> issues = issuesService.getAllIssues();
+            return new ResponseEntity<>(issues, HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @PostMapping
-    public ResponseEntity<Events> createEvent(@Valid @RequestBody Events events){
+    public ResponseEntity<Issues> createIssue(@Valid @RequestBody Issues issues){
         try {
-            Events createdEvent = eventService.createEvent(events);
-            return new ResponseEntity<>(createdEvent, HttpStatus.CREATED);
+            Issues createdIssue = issuesService.createIssue(issues);
+            return new ResponseEntity<>(createdIssue, HttpStatus.CREATED);
         }catch (Exception e){
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
     }
 
-    @GetMapping("/{eventId}")
-    public ResponseEntity<Events> getEventById(@PathVariable Long eventId){
+    @GetMapping("/{issueId}")
+    public ResponseEntity<Issues> getIssueById(@PathVariable Long issueId){
         try {
-            Events eventById = eventService.getEventById(eventId);
-            return new ResponseEntity<>(eventById, HttpStatus.ACCEPTED);
+            Issues issueById = issuesService.getIssueById(issueId);
+            return new ResponseEntity<>(issueById, HttpStatus.ACCEPTED);
         }catch (Exception e){
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @DeleteMapping("/{eventId}")
-    public ResponseEntity<Boolean> deleteEventById(@PathVariable Long eventId){
+    @DeleteMapping("/{issueId}")
+    public ResponseEntity<Boolean> deleteIssueById(@PathVariable Long issueId){
         try {
-            eventService.deleteEventById(eventId);
+            issuesService.deleteIssueById(issueId);
             return new ResponseEntity<>(true, HttpStatus.ACCEPTED);
         }catch (Exception e){
             return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
         }
     }
 
-    @PutMapping("/{eventId}")
-    public ResponseEntity<Boolean> updateEventById(@Valid @RequestBody Events events, @PathVariable Long eventId){
+    @PutMapping("/{issueId}")
+    public ResponseEntity<Boolean> updateIssueById(@Valid @RequestBody Issues issues, @PathVariable Long issueId){
         try {
-            eventService.updateEventById(events,eventId);
+            issuesService.updateIssueById(issues,issueId);
             return new ResponseEntity<>(true, HttpStatus.ACCEPTED);
         }catch (Exception e){
             return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
