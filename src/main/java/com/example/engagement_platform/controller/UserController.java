@@ -18,15 +18,19 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/hello")
-    public String greetings(){
-        return "Hello Sylvia, Welcome to Civic";
-    }
+//    @GetMapping("/hello")
+//    public String greetings(){
+//        return "Hello Sylvia, Welcome to Civic";
+//    }
 
     @GetMapping
     public ResponseEntity<List<Users>> getAllUsers(){
-         List<Users> listOfUsers = userService.getAllUsers();
-         return new ResponseEntity<>(listOfUsers, HttpStatus.OK);
+         try {
+             List<Users> listOfUsers = userService.getAllUsers();
+             return new ResponseEntity<>(listOfUsers, HttpStatus.OK);
+         }catch (Exception e){
+             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+         }
     }
 
     @PostMapping
