@@ -2,6 +2,7 @@ package com.example.engagement_platform.controller;
 
 import com.example.engagement_platform.model.Comments;
 import com.example.engagement_platform.service.CommentService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -9,10 +10,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/v1/comment")
 public class CommentController {
 
-    private CommentService commentService;
+    private final CommentService commentService;
 
     @GetMapping
     public ResponseEntity<List<Comments>> getAllComments(){

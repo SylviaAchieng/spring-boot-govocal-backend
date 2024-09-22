@@ -14,12 +14,11 @@ public class RSVP {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long rsvpID;
 
-    @ManyToOne
-    @JoinColumn(name = "eventId")
-    private Events events;
+    @Column(name = "event_id")
+    private Long events;
 
-    @ManyToOne
-    @JoinColumn(name = "userId")
+    @OneToOne
+    @JoinColumn(referencedColumnName = "userId", name = "user_id")
     private Users users;
 
     private String rsvpStatus;

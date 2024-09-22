@@ -15,32 +15,33 @@ public class Users {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "userId")
     private Long userId;
 
-    @NotNull(message = "fullName is mandatory")
-    @Size( min = 2,max = 200, message = "fullName must be between 2 and 200 characters")
+    @Column(name = "full_name")
     private String fullName;
 
-    @Email(message = "Please provide a valid email address")
-    @NotNull(message = "user email is mandatory")
+    @Column(name = "email")
     private String email;
 
-    @NotNull(message = "password is mandatory")
-    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,20}$",
-            message = "Password must be 8-20 characters long, contain at least one digit, one lowercase letter, one uppercase letter, one special character, and have no whitespace")
+    @Column(name = "password")
     private String password;
 
-    @NotNull(message = "nationalId is mandatory")
+    @Column(name = "national_id")
     private Integer nationalId;
 
-    @NotNull(message = "userType is mandatory")
+    @Column(name = "user_type")
     private UserType userType;
 
-    @NotNull(message = "user location is mandatory")
+    @Column(name = "location")
     private String location;
 
-   // @OneToOne  //(mappedBy = "user", cascade = CascadeType.ALL)
-   // private PublicServant publicServant;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(referencedColumnName = "publicServantID", name = "public_servant_public_servantid")
+    private PublicServant publicServant;
 
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "locationId")
+    private Location locationId;
 
 }

@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.sql.Date;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,5 +20,5 @@ public class Comments {
 
     private String comment;
 
-    private String createdAt;
+    private Date createdAt;
 }

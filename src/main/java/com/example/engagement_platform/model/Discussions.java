@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.sql.Date;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -24,7 +26,7 @@ public class Discussions {
 
     @NotNull(message = "creation date is mandatory")
     @NotBlank(message = "createdAt field shld not be empty")
-    private String createdAt;
+    private Date createdAt;
 
     @NotNull(message = "description is mandatory")
     @NotBlank(message = "description field shld not be empty")

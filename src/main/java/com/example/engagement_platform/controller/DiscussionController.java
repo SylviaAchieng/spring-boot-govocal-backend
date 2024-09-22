@@ -5,6 +5,7 @@ import com.example.engagement_platform.model.Events;
 import com.example.engagement_platform.service.DiscussionService;
 import com.example.engagement_platform.service.EventService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,11 +14,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/v1/discussions")
 public class DiscussionController {
 
-    @Autowired
-    private DiscussionService discussionService;
+    private final DiscussionService discussionService;
 
     @GetMapping
     public ResponseEntity<List<Discussions>> getAllDiscussions(){

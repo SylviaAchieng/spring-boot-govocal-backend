@@ -5,6 +5,7 @@ import com.example.engagement_platform.model.Notifications;
 import com.example.engagement_platform.service.EventService;
 import com.example.engagement_platform.service.NotificationService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,11 +14,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/v1/notifications")
 public class NotificationController {
 
-    @Autowired
-    private NotificationService notificationService;
+
+    private final NotificationService notificationService;
 
     @GetMapping
     public ResponseEntity<List<Notifications>> getAllNotifications(){

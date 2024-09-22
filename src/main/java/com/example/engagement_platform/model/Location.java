@@ -17,20 +17,20 @@ import java.util.List;
 public class Location {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue
+    @Column(name = "location_id")
     private Long locationId;
 
+    @Column(name = "address")
     private String address;
 
+    @Column(name = "city")
     private String city;
 
+    @Column(name = "county")
     private String county;
 
+    @Column(name = "zip_code")
     private String zipCode;
 
-    @OneToMany
-    private List<Events> events;
-
-    @OneToMany
-    private List<Issues> issues;
 }

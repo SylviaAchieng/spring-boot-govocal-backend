@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Blob;
+import java.sql.Date;
 
 @Data
 @AllArgsConstructor
@@ -34,12 +35,19 @@ public class Issues {
 
     @NotNull(message = "creation date is mandatory")
     @NotBlank(message = "createdAt field shld not be empty")
-    private String createdAt;
+    private Date createdAt;
 
-    private String issueImage;
+    @ManyToOne
+    @JoinColumn(name = "imageId")
+    private Image image;
 
-    @NotNull(message = "location is mandatory")
-    @NotBlank(message = "location field shld not be empty")
-    private String location;
+
+    @ManyToOne
+    @JoinColumn(name = "locationId")
+    private Location location;
+
+    @ManyToOne
+    @JoinColumn(name = "userId")
+    private Users user;
 
 }

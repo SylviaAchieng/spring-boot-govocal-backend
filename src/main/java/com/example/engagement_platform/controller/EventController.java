@@ -3,6 +3,7 @@ package com.example.engagement_platform.controller;
 import com.example.engagement_platform.model.Events;
 import com.example.engagement_platform.service.EventService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,11 +12,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/v1/events")
 public class EventController {
 
-    @Autowired
-    private EventService eventService;
+    private final EventService eventService;
 
     @GetMapping
     public ResponseEntity<List<Events>> getAllEvents(){
