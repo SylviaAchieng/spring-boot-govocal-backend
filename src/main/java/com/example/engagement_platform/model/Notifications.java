@@ -28,12 +28,14 @@ public class Notifications {
     @NotBlank(message = "Description field shld not be empty")
     private String description;
 
-    @NotNull(message = "date is mandatory")
-    @NotBlank(message = "sentAt field shld not be empty")
     private Date sentAt;
 
     @NotNull(message = "status  is mandatory")
     @NotBlank(message = "status field shld not be empty")
     private String status;
+
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(referencedColumnName = "userId", name = "user_id")
+    private Users user;
 
 }

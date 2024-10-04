@@ -26,28 +26,26 @@ public class Issues {
     private String title;
 
     @NotNull(message = " description is mandatory")
-    @NotBlank(message = "Description field shld not be empty")
     private String description;
 
     @NotNull(message = "status  is mandatory")
-    @NotBlank(message = "status field shld not be empty")
     private String status;
 
     @NotNull(message = "creation date is mandatory")
-    @NotBlank(message = "createdAt field shld not be empty")
     private Date createdAt;
 
     @ManyToOne
     @JoinColumn(name = "imageId")
     private Image image;
 
+    private String Location;
 
     @ManyToOne
-    @JoinColumn(name = "locationId")
-    private Location location;
+    @JoinColumn(referencedColumnName = "locationId", name = "location_id")
+    private Location locationId;
 
     @ManyToOne
-    @JoinColumn(name = "userId")
+    @JoinColumn(referencedColumnName = "userId", name = "user_id")
     private Users user;
 
 }

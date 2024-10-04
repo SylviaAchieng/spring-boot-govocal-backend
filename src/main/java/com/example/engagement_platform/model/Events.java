@@ -41,15 +41,12 @@ public class Events {
     @Column(name = "event_date")
     private Date eventDate;
 
-    @Column(name = "location")
-    private String location;
-
     @ManyToOne
-    @JoinColumn(name = "locationId")
-    private Location locationId;
+    @JoinColumn(referencedColumnName = "locationId", name = "location_id")
+    private Location location;
 
-    @ManyToOne
-    @JoinColumn(name = "userId")
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(referencedColumnName = "userId", name = "user_id")
     private Users user;
 
 }

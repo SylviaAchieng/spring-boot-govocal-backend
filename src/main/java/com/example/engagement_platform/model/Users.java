@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class Users {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue
     @Column(name = "userId")
     private Long userId;
 
@@ -33,15 +33,12 @@ public class Users {
     @Column(name = "user_type")
     private UserType userType;
 
-    @Column(name = "location")
-    private String location;
-
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(referencedColumnName = "publicServantID", name = "public_servant_public_servantid")
     private PublicServant publicServant;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "locationId")
-    private Location locationId;
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(referencedColumnName = "locationId", name = "location_id")
+    private Location location;
 
 }

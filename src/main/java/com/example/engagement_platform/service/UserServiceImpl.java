@@ -4,8 +4,11 @@ import com.example.engagement_platform.common.GenericResponse;
 import com.example.engagement_platform.common.GenericResponseV2;
 import com.example.engagement_platform.common.ResponseStatusEnum;
 import com.example.engagement_platform.mappers.UserMapper;
+import com.example.engagement_platform.model.Location;
+import com.example.engagement_platform.model.UserType;
 import com.example.engagement_platform.model.Users;
 import com.example.engagement_platform.model.dto.UserDto;
+import com.example.engagement_platform.repository.LocationRepository;
 import com.example.engagement_platform.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +24,7 @@ public class UserServiceImpl implements UserService{
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final LocationRepository locationRepository;
 
     @Override
     public GenericResponseV2 getAllUsers() {
@@ -44,6 +48,41 @@ public class UserServiceImpl implements UserService{
     @Override
     public GenericResponse addUsers(Users users) {
         try {
+            // Fetch the location details based on the locationId from the Users entity
+            if (users.getLocation() != null && users.getLocation().getLocationId() != null) {
+                Location location = locationRepository.findById(users.getLocation().getLocationId())
+                        .orElseThrow(() -> new RuntimeException("Location not found"));
+                users.setLocation(location);  // Set the location in the user entity
+            }
+            // Determine user type and set relevant details
+            String userType = String.valueOf(users.getUserType()).toUpperCase();
+
+            if ("PUBLIC_SERVANT".equals(userType)) {
+                // Ensure public servant details are provided
+                if (users.getPublicServant() == null) {
+                    return GenericResponse.builder()
+                            .status(ResponseStatusEnum.ERROR)
+                            .message("Public servant details must be provided for PUBLIC_SERVANT user type")
+                            .build();
+                }
+            } else if ("ADMIN".equals(userType)) {
+                users.setUserType(UserType.ADMIN);
+            } else if ("CITIZEN".equals(userType)) {
+                users.setUserType(UserType.CITIZEN);
+            } else {
+                return GenericResponse.builder()
+                        .status(ResponseStatusEnum.ERROR)
+                        .message("Invalid user type provided")
+                        .build();
+            }
+
+            users.setUserType(UserType.PUBLIC_SERVANT);
+
+            // Remove public servant details if user is not a public servant
+            if (!"PUBLIC_SERVANT".equals(userType)) {
+                users.setPublicServant(null);
+            }
+
             Users createdUser = userRepository.save(users);
             return GenericResponse.builder()
                     .status(ResponseStatusEnum.SUCCESS)

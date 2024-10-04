@@ -32,4 +32,8 @@ public class Discussions {
     @NotBlank(message = "description field shld not be empty")
     private String description;
 
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(referencedColumnName = "userId", name = "user_id")
+    private Users users;
+
 }

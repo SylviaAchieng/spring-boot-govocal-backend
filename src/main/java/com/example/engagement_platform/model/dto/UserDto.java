@@ -44,4 +44,6 @@ public class UserDto {
     private String location;
 
     private Long publicServantId;
+
+    private Long locationId;
 }

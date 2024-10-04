@@ -18,19 +18,14 @@ public class Location {
 
     @Id
     @GeneratedValue
-    @Column(name = "location_id")
     private Long locationId;
 
-    @Column(name = "address")
     private String address;
 
-    @Column(name = "city")
     private String city;
 
-    @Column(name = "county")
     private String county;
 
-    @Column(name = "zip_code")
     private String zipCode;
 
 }

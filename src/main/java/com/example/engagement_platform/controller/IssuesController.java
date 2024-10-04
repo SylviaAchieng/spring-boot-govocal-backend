@@ -1,5 +1,7 @@
 package com.example.engagement_platform.controller;
 
+import com.example.engagement_platform.common.GenericResponseV2;
+import com.example.engagement_platform.common.ResponseStatusEnum;
 import com.example.engagement_platform.model.Events;
 import com.example.engagement_platform.model.Issues;
 import com.example.engagement_platform.service.EventService;
@@ -15,7 +17,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/issues")
+@RequestMapping("/api/v1/issue")
 public class IssuesController {
 
     private final IssuesService issuesService;
@@ -31,13 +33,13 @@ public class IssuesController {
     }
 
     @PostMapping
-    public ResponseEntity<Issues> createIssue(@Valid @RequestBody Issues issues){
-        try {
-            Issues createdIssue = issuesService.createIssue(issues);
-            return new ResponseEntity<>(createdIssue, HttpStatus.CREATED);
-        }catch (Exception e){
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public ResponseEntity<GenericResponseV2<Issues>> createIssue(@Valid @RequestBody Issues issues){
+            GenericResponseV2<Issues> responseV2 = issuesService.createIssue(issues);
+            if (responseV2.getStatus().equals(ResponseStatusEnum.SUCCESS)){
+                return ResponseEntity.ok().body(responseV2);
+            }else {
+                return ResponseEntity.badRequest().body(responseV2);
+            }
 
     }
 
