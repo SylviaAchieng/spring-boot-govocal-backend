@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Data;
 
+import java.math.BigInteger;
+
 @Data
 @Builder
 @Entity
@@ -11,15 +13,15 @@ import lombok.Data;
 public class RSVP {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long rsvpID;
-
-    @Column(name = "event_id")
-    private Long events;
+    @ManyToOne
+    @JoinColumn(referencedColumnName = "event_id", name = "event_id")
+    private Event event;
 
     @OneToOne
-    @JoinColumn(referencedColumnName = "userId", name = "user_id")
-    private Users users;
+    @JoinColumn(referencedColumnName = "user_id", name = "user_id")
+    private User user;
 
     private String rsvpStatus;
 }

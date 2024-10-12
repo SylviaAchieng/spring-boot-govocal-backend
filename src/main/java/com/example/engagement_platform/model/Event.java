@@ -9,27 +9,22 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Date;
-import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "events")
-public class Events {
+@Table(name = "event")
+public class Event {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "event_id")
     private Long eventId;
 
-    @NotNull(message = "event title is mandatory")
-    @NotBlank(message = "title field shld not be empty")
     @Column(name = "title")
     private String title;
 
-    @NotNull(message = "event description is mandatory")
-    @NotBlank(message = "Description field shld not be empty")
     @Column(name = "description")
     private String description;
 
@@ -37,16 +32,15 @@ public class Events {
     @Column(name = "created_at")
     private Date createdAt;
 
-    @NotNull(message = "event date is mandatory")
     @Column(name = "event_date")
     private Date eventDate;
 
     @ManyToOne
-    @JoinColumn(referencedColumnName = "locationId", name = "location_id")
+    @JoinColumn(referencedColumnName = "location_id", name = "location_id")
     private Location location;
 
     @ManyToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(referencedColumnName = "userId", name = "user_id")
-    private Users user;
+    @JoinColumn(referencedColumnName = "user_id", name = "user_id")
+    private User user;
 
 }

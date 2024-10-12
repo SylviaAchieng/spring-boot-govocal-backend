@@ -2,22 +2,22 @@ package com.example.engagement_platform.service;
 
 import com.example.engagement_platform.common.GenericResponse;
 import com.example.engagement_platform.common.GenericResponseV2;
-import com.example.engagement_platform.model.Users;
+import com.example.engagement_platform.model.User;
+import com.example.engagement_platform.model.dto.UserDto;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface UserService {
 
 
 
-    GenericResponse addUsers(Users users);
+    GenericResponse addUsers(UserDto users);
 
-    Users getUserById(Long userId);
+    User getUserById(Long userId);
 
     void deleteUserById(Long userId);
 
-    void updateUserById(Long userId, Users users);
+    void updateUserById(Long userId, User users);
 
-    GenericResponseV2 getAllUsers();
+    GenericResponseV2<List<UserDto>> getAllUsers();
 }

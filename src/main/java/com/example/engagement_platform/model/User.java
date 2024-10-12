@@ -1,21 +1,24 @@
 package com.example.engagement_platform.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigInteger;
+
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "users")
-public class Users {
+public class User {
 
     @Id
-    @GeneratedValue
-    @Column(name = "userId")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private Long userId;
 
     @Column(name = "full_name")
@@ -24,21 +27,18 @@ public class Users {
     @Column(name = "email")
     private String email;
 
-    @Column(name = "password")
+    @Column(name = "passcode")
     private String password;
 
     @Column(name = "national_id")
     private Integer nationalId;
 
     @Column(name = "user_type")
+    @Enumerated(value = EnumType.STRING)
     private UserType userType;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(referencedColumnName = "publicServantID", name = "public_servant_public_servantid")
-    private PublicServant publicServant;
-
     @ManyToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(referencedColumnName = "locationId", name = "location_id")
+    @JoinColumn(referencedColumnName = "location_id", name = "location_id")
     private Location location;
 
 }

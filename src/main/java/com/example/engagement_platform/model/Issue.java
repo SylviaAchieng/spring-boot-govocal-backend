@@ -7,18 +7,17 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Blob;
 import java.sql.Date;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "issues")
-public class Issues {
+@Table(name = "issue")
+public class Issue {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long issueId;
 
     @NotNull(message = "title is mandatory")
@@ -35,17 +34,15 @@ public class Issues {
     private Date createdAt;
 
     @ManyToOne
-    @JoinColumn(name = "imageId")
+    @JoinColumn(name = "image_id")
     private Image image;
 
-    private String Location;
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(referencedColumnName = "location_id", name = "location_id")
+    private Location location;
 
     @ManyToOne
-    @JoinColumn(referencedColumnName = "locationId", name = "location_id")
-    private Location locationId;
-
-    @ManyToOne
-    @JoinColumn(referencedColumnName = "userId", name = "user_id")
-    private Users user;
+    @JoinColumn(referencedColumnName = "user_id", name = "user_id")
+    private User user;
 
 }

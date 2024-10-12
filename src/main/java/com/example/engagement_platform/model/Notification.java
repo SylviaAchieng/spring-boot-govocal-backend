@@ -7,17 +7,18 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigInteger;
 import java.sql.Date;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "notifications")
-public class Notifications {
+@Table(name = "notification")
+public class Notification {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long notificationId;
 
     @NotNull(message = "notification type is mandatory")
@@ -35,7 +36,7 @@ public class Notifications {
     private String status;
 
     @ManyToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(referencedColumnName = "userId", name = "user_id")
-    private Users user;
+    @JoinColumn(referencedColumnName = "user_id", name = "user_id")
+    private User user;
 
 }

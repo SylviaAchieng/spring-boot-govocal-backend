@@ -1,13 +1,12 @@
 package com.example.engagement_platform.service;
 
-import com.example.engagement_platform.common.GenericResponse;
 import com.example.engagement_platform.common.GenericResponseV2;
 import com.example.engagement_platform.common.ResponseStatusEnum;
 import com.example.engagement_platform.exception.NoSuchRecordFoundException;
 import com.example.engagement_platform.mappers.RsvpMapper;
-import com.example.engagement_platform.model.Events;
+import com.example.engagement_platform.model.Event;
 import com.example.engagement_platform.model.RSVP;
-import com.example.engagement_platform.model.Users;
+import com.example.engagement_platform.model.User;
 import com.example.engagement_platform.model.dto.request.RsvpRequest;
 import com.example.engagement_platform.model.dto.response.RsvpDto;
 import com.example.engagement_platform.repository.EventRepository;
@@ -16,7 +15,6 @@ import com.example.engagement_platform.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,8 +32,8 @@ public class RsvpServiceImpl implements RsvpService {
     @Override
     public GenericResponseV2<RsvpDto> add(RsvpRequest rsvpRequest) {
         // step 1 check if event and user are present
-        Users user = userRepository.findById(rsvpRequest.getUserId()).orElseThrow(() -> new NoSuchRecordFoundException("User not found")); //todo:
-        Events event = eventRepository.findById(rsvpRequest.getEventId()).orElseThrow(() -> new NoSuchRecordFoundException("Event not found"));
+        User user = userRepository.findById(rsvpRequest.getUserId()).orElseThrow(() -> new NoSuchRecordFoundException("User not found")); //todo:
+        Event event = eventRepository.findById(rsvpRequest.getEventId()).orElseThrow(() -> new NoSuchRecordFoundException("Event not found"));
 
         // step 2: check if event is still on
         LocalDate eventDate = event.getEventDate().toLocalDate();
@@ -53,8 +51,8 @@ public class RsvpServiceImpl implements RsvpService {
         // step 5: save rsvp
         RSVP rsvp = RSVP.builder()
                 .rsvpStatus("BOOKED") //TODO: figure out which status go here
-                .events(event.getEventId())
-                .users(user)
+                .event(event.getEventId())
+                .user(user)
                 .build();
         RSVP savedRsvp = rsvpRepository.save(rsvp);
         return GenericResponseV2.<RsvpDto>builder()

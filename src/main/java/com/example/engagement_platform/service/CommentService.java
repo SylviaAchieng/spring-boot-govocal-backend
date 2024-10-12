@@ -1,17 +1,17 @@
 package com.example.engagement_platform.service;
 
-import com.example.engagement_platform.model.Comments;
+import com.example.engagement_platform.model.Comment;
 
 import java.util.List;
 
 public interface CommentService {
-    List<Comments> getAllComments();
+    List<Comment> getAllComments();
 
-    Comments createComment(Comments comments);
+    Comment createComment(Comment comments);
 
-    Comments getCommentById(Long commentId);
+    Comment getCommentById(Long commentId);
 
     void deleteCommentById(Long commentId);
 
-    void updateCommentById(Long commentId, Comments comments);
+    void updateCommentById(Long commentId, Comment comments);
 }

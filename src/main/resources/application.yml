@@ -5,10 +5,10 @@ spring:
   application:
     name: CIVIC_ENGAGEMENT_PLATFORM
   datasource:
-    url: jdbc:mysql://localhost:3306/engagement_platform
+    url: jdbc:mysql://localhost:3306/civic_db
     username: root
     password:
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none

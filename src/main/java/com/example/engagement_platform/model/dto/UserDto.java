@@ -2,6 +2,7 @@ package com.example.engagement_platform.model.dto;
 
 import com.example.engagement_platform.model.PublicServant;
 import com.example.engagement_platform.model.UserType;
+import com.example.engagement_platform.model.dto.request.PublicServantDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
@@ -11,6 +12,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.math.BigInteger;
 
 @Data
 @NoArgsConstructor
@@ -40,10 +43,7 @@ public class UserDto {
     @NotNull(message = "userType is mandatory")
     private UserType userType;
 
-    @NotNull(message = "user location is mandatory")
-    private String location;
-
-    private Long publicServantId;
+    private PublicServantDto publicServant;
 
     private Long locationId;
 }

@@ -1,6 +1,6 @@
 package com.example.engagement_platform.controller;
 
-import com.example.engagement_platform.model.Comments;
+import com.example.engagement_platform.model.Comment;
 import com.example.engagement_platform.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,9 +17,9 @@ public class CommentController {
     private final CommentService commentService;
 
     @GetMapping
-    public ResponseEntity<List<Comments>> getAllComments(){
+    public ResponseEntity<List<Comment>> getAllComments(){
         try {
-            List<Comments> comments = commentService.getAllComments();
+            List<Comment> comments = commentService.getAllComments();
             return new ResponseEntity<>(comments, HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -27,9 +27,9 @@ public class CommentController {
     }
 
     @PostMapping
-    public ResponseEntity<Comments> createComment(@RequestBody Comments comments){
+    public ResponseEntity<Comment> createComment(@RequestBody Comment comments){
         try {
-            Comments createdComment = commentService.createComment(comments);
+            Comment createdComment = commentService.createComment(comments);
             return new ResponseEntity<>(createdComment, HttpStatus.CREATED);
         }catch (Exception e){
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -37,9 +37,9 @@ public class CommentController {
     }
 
     @GetMapping("/{commentId}")
-    public ResponseEntity<Comments> getCommentById(@PathVariable Long commentId){
+    public ResponseEntity<Comment> getCommentById(@PathVariable Long commentId){
         try {
-            Comments commentById = commentService.getCommentById(commentId);
+            Comment commentById = commentService.getCommentById(commentId);
             return new ResponseEntity<>(commentById, HttpStatus.ACCEPTED);
         }catch (Exception e){
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -57,7 +57,7 @@ public class CommentController {
     }
 
     @PutMapping("/{commentId}")
-    public ResponseEntity<Boolean> updateCommentById(@RequestBody Comments comments, @PathVariable Long commentId){
+    public ResponseEntity<Boolean> updateCommentById(@RequestBody Comment comments, @PathVariable Long commentId){
         try {
             commentService.updateCommentById(commentId, comments);
             return new ResponseEntity<>(true, HttpStatus.ACCEPTED);

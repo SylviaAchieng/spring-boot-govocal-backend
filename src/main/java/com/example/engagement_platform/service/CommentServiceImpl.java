@@ -1,6 +1,6 @@
 package com.example.engagement_platform.service;
 
-import com.example.engagement_platform.model.Comments;
+import com.example.engagement_platform.model.Comment;
 import com.example.engagement_platform.repository.CommentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,18 +15,18 @@ public class CommentServiceImpl implements CommentService{
     private CommentRepository commentRepository;
 
     @Override
-    public List<Comments> getAllComments() {
+    public List<Comment> getAllComments() {
         return commentRepository.findAll();
     }
 
     @Override
-    public Comments createComment(Comments comments) {
+    public Comment createComment(Comment comments) {
         return commentRepository.save(comments);
     }
 
     @Override
-    public Comments getCommentById(Long commentId) {
-        Optional<Comments> commentFrDb = commentRepository.findById(commentId);
+    public Comment getCommentById(Long commentId) {
+        Optional<Comment> commentFrDb = commentRepository.findById(commentId);
         if (commentFrDb.isPresent()){
             return commentFrDb.get();
         }else {
@@ -36,7 +36,7 @@ public class CommentServiceImpl implements CommentService{
 
     @Override
     public void deleteCommentById(Long commentId) {
-        Optional<Comments> commentFromDb = commentRepository.findById(commentId);
+        Optional<Comment> commentFromDb = commentRepository.findById(commentId);
         if (commentFromDb.isPresent()){
             commentRepository.deleteById(commentId);
         }else {
@@ -45,8 +45,8 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    public void updateCommentById(Long commentId, Comments comments) {
-        Optional<Comments> commentsFrDb = commentRepository.findById(commentId);
+    public void updateCommentById(Long commentId, Comment comments) {
+        Optional<Comment> commentsFrDb = commentRepository.findById(commentId);
         if (commentsFrDb.isPresent()){
             commentRepository.save(comments);
         }else {

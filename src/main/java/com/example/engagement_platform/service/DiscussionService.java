@@ -1,18 +1,17 @@
 package com.example.engagement_platform.service;
 
-import com.example.engagement_platform.model.Discussions;
-import com.example.engagement_platform.model.Events;
+import com.example.engagement_platform.model.Discussion;
 
 import java.util.List;
 
 public interface DiscussionService {
-    List<Discussions> getAllDiscussions();
+    List<Discussion> getAllDiscussions();
 
-    Discussions createDiscussion(Discussions discussions);
+    Discussion createDiscussion(Discussion discussions);
 
-    Discussions getDiscussionById(Long discussionId);
+    Discussion getDiscussionById(Long discussionId);
 
     void deleteDiscussionById(Long discussionId);
 
-    void updateDiscussionById(Discussions discussions, Long discussionId);
+    void updateDiscussionById(Discussion discussions, Long discussionId);
 }

@@ -1,17 +1,17 @@
 package com.example.engagement_platform.service;
 
-import com.example.engagement_platform.model.Events;
+import com.example.engagement_platform.model.Event;
 
 import java.util.List;
 
 public interface EventService {
-    List<Events> getAllEvents();
+    List<Event> getAllEvents();
 
-    Events createEvent(Events events);
+    Event createEvent(Event events);
 
-    Events getEventById(Long eventId);
+    Event getEventById(Long eventId);
 
     void deleteEventById(Long eventId);
 
-    void updateEventById(Events events, Long eventId);
+    void updateEventById(Event events, Long eventId);
 }

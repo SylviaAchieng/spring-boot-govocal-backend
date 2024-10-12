@@ -1,9 +1,7 @@
 package com.example.engagement_platform.service;
 
-import com.example.engagement_platform.model.Discussions;
-import com.example.engagement_platform.model.Events;
+import com.example.engagement_platform.model.Discussion;
 import com.example.engagement_platform.repository.DiscussionRepository;
-import com.example.engagement_platform.repository.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,18 +15,18 @@ public class DiscussionServiceImpl implements DiscussionService{
     private DiscussionRepository discussionRepository;
 
     @Override
-    public List<Discussions> getAllDiscussions() {
+    public List<Discussion> getAllDiscussions() {
         return discussionRepository.findAll();
     }
 
     @Override
-    public Discussions createDiscussion(Discussions discussions) {
+    public Discussion createDiscussion(Discussion discussions) {
         return discussionRepository.save(discussions);
     }
 
     @Override
-    public Discussions getDiscussionById(Long discussionId) {
-        Optional<Discussions> discussionFromDb = discussionRepository.findById(discussionId);
+    public Discussion getDiscussionById(Long discussionId) {
+        Optional<Discussion> discussionFromDb = discussionRepository.findById(discussionId);
         if (discussionFromDb.isPresent()){
             return discussionFromDb.get();
         }else {
@@ -38,7 +36,7 @@ public class DiscussionServiceImpl implements DiscussionService{
 
     @Override
     public void deleteDiscussionById(Long discussionId) {
-        Optional<Discussions> discussionFrDb = discussionRepository.findById(discussionId);
+        Optional<Discussion> discussionFrDb = discussionRepository.findById(discussionId);
         if (discussionFrDb.isPresent()){
             discussionRepository.deleteById(discussionId);
         }else{
@@ -47,8 +45,8 @@ public class DiscussionServiceImpl implements DiscussionService{
     }
 
     @Override
-    public void updateDiscussionById(Discussions discussions, Long discussionId) {
-        Optional<Discussions> eventFrDatabase = discussionRepository.findById(discussionId);
+    public void updateDiscussionById(Discussion discussions, Long discussionId) {
+        Optional<Discussion> eventFrDatabase = discussionRepository.findById(discussionId);
         if (eventFrDatabase.isPresent()){
             discussionRepository.save(discussions);
         }else {
