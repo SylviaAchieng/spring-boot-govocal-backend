@@ -13,7 +13,7 @@ public interface IssuesService {
 
     void deleteIssueById(Long issueId);
 
-    void updateIssueById(Issue issues, Long issueId);
+    GenericResponseV2<Boolean> updateIssueById(IssueDto issueDto, Long issueId);
 
     GenericResponseV2<IssueDto> createIssue(IssueDto issueDto);
 }

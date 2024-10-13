@@ -52,7 +52,6 @@ public class IssueServiceImpl implements IssuesService{
     public GenericResponseV2<IssueDto> getIssueById(Long issueId) {
         try {
             Issue issueFromDb = issueRepository.findByIssueId(issueId).orElseThrow(() -> new RuntimeException("Issue not found"));
-
             IssueDto response = issueMapper.toDto(issueFromDb);
             return GenericResponseV2.<IssueDto>builder()
                     .status(ResponseStatusEnum.SUCCESS)
@@ -82,13 +81,28 @@ public class IssueServiceImpl implements IssuesService{
     }
 
     @Override
-    public void updateIssueById(Issue issues, Long issueId) {
-        Optional<Issue> issueFrDatabase = issueRepository.findById(issueId);
-        if (issueFrDatabase.isPresent()){
-            issueRepository.save(issues);
-        }else {
-            throw new RuntimeException("Issue not found");
+    public GenericResponseV2<Boolean> updateIssueById(IssueDto issueDto, Long issueId) {
+        try {
+            Issue issueToSave = issueMapper.toEntity(issueDto);
+            Image savedImage = imageRepository.save(issueToSave.getIssueImage());
+            issueToSave.setIssueImage(savedImage);
+            Issue savedIssue = issueRepository.save(issueToSave);
+            issueMapper.toDto(savedIssue);
+            return GenericResponseV2.<Boolean>builder()
+                    .status(ResponseStatusEnum.SUCCESS)
+                    .message("Issue updated successfully")
+                    ._embedded(true)
+                    .build();
+        }catch (Exception e){
+            e.printStackTrace();
+            return GenericResponseV2.<Boolean>builder()
+                    .status(ResponseStatusEnum.ERROR)
+                    .message("Unable to update issue")
+                    ._embedded(false)
+                    .build();
         }
+
+
     }
 
     @Override

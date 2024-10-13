@@ -13,11 +13,11 @@ public interface UserService {
 
     GenericResponse addUsers(UserDto users);
 
-    User getUserById(Long userId);
+    GenericResponseV2<UserDto> getUserById(Long userId);
 
     void deleteUserById(Long userId);
 
-    void updateUserById(Long userId, User users);
+    GenericResponseV2<Boolean> updateUserById(Long userId, UserDto userDto);
 
     GenericResponseV2<List<UserDto>> getAllUsers();
 }

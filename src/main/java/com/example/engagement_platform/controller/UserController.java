@@ -33,7 +33,7 @@ public class UserController {
              if (responseV2.getStatus().equals(ResponseStatusEnum.SUCCESS)){
                  return ResponseEntity.ok().body(responseV2);
              }else {
-                 return ResponseEntity.ok().body(responseV2);
+                 return ResponseEntity.badRequest().body(responseV2);
              }
     }
 
@@ -43,17 +43,17 @@ public class UserController {
             if(response.getStatus()== ResponseStatusEnum.SUCCESS){
                 return ResponseEntity.ok().body(response);
             }else {
-                return ResponseEntity.ok().body(response);
+                return ResponseEntity.badRequest().body(response);
             }
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<User> getUserById(@PathVariable Long userId){
-        try {
-            User userById = userService.getUserById(userId);
-            return new ResponseEntity<>(userById, HttpStatus.OK);
-        }catch (Exception e){
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<GenericResponseV2<UserDto>> getUserById(@PathVariable Long userId){
+        GenericResponseV2<UserDto> responseV2 = userService.getUserById(userId);
+        if (responseV2.getStatus().equals(ResponseStatusEnum.SUCCESS)){
+            return ResponseEntity.ok().body(responseV2);
+        }else {
+            return ResponseEntity.badRequest().body(responseV2);
         }
 
 
@@ -71,13 +71,14 @@ public class UserController {
     }
 
     @PutMapping("/{userId}")
-    public ResponseEntity<Boolean> updateUserById(@Valid @RequestBody User users, @PathVariable Long userId){
-        try {
-            userService.updateUserById(userId, users);
-            return new ResponseEntity<>(true, HttpStatus.ACCEPTED);
-        }catch (Exception e){
-            return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
+    public ResponseEntity<GenericResponseV2<Boolean>> updateUserById(@Valid @RequestBody UserDto userDto, @PathVariable Long userId){
+        GenericResponseV2<Boolean> responseV2 = userService.updateUserById(userId, userDto);
+        if (responseV2.getStatus().equals(ResponseStatusEnum.SUCCESS)){
+            return ResponseEntity.ok().body(responseV2);
+        }else {
+            return ResponseEntity.badRequest().body(responseV2);
         }
+
 
     }
 }

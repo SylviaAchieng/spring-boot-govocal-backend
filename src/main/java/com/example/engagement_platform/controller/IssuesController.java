@@ -62,12 +62,12 @@ public class IssuesController {
     }
 
     @PutMapping("/{issueId}")
-    public ResponseEntity<Boolean> updateIssueById(@Valid @RequestBody Issue issues, @PathVariable Long issueId){
-        try {
-            issuesService.updateIssueById(issues,issueId);
-            return new ResponseEntity<>(true, HttpStatus.ACCEPTED);
-        }catch (Exception e){
-            return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<GenericResponseV2<Boolean>> updateIssueById(@Valid @RequestBody IssueDto issueDto, @PathVariable Long issueId){
+            GenericResponseV2<Boolean> responseV2 = issuesService.updateIssueById(issueDto,issueId);
+            if (responseV2.getStatus().equals(ResponseStatusEnum.SUCCESS)){
+                return ResponseEntity.ok().body(responseV2);
+            }else {
+                return ResponseEntity.badRequest().body(responseV2);
+            }
     }
 }

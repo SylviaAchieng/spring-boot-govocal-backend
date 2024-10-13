@@ -1,6 +1,9 @@
 package com.example.engagement_platform.controller;
 
+import com.example.engagement_platform.common.GenericResponseV2;
+import com.example.engagement_platform.common.ResponseStatusEnum;
 import com.example.engagement_platform.model.Discussion;
+import com.example.engagement_platform.model.dto.response.DiscussionDto;
 import com.example.engagement_platform.service.DiscussionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,33 +21,32 @@ public class DiscussionController {
     private final DiscussionService discussionService;
 
     @GetMapping
-    public ResponseEntity<List<Discussion>> getAllDiscussions(){
-        try {
-            List<Discussion> discussions = discussionService.getAllDiscussions();
-            return new ResponseEntity<>(discussions, HttpStatus.OK);
-        }catch (Exception e){
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<GenericResponseV2<List<DiscussionDto>>> getAllDiscussions(){
+        GenericResponseV2<List<DiscussionDto>> responseV2 = discussionService.getAllDiscussions();
+        if (responseV2.getStatus().equals(ResponseStatusEnum.SUCCESS)){
+            return ResponseEntity.ok().body(responseV2);
+        }else {
+            return ResponseEntity.badRequest().body(responseV2);
         }
     }
 
     @PostMapping
-    public ResponseEntity<Discussion> createDiscussion(@Valid @RequestBody Discussion discussions){
-        try {
-            Discussion createdDiscussion = discussionService.createDiscussion(discussions);
-            return new ResponseEntity<>(createdDiscussion, HttpStatus.CREATED);
-        }catch (Exception e){
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<GenericResponseV2<DiscussionDto>> createDiscussion(@Valid @RequestBody DiscussionDto discussionDto){
+        GenericResponseV2<DiscussionDto> responseV2 = discussionService.createDiscussion(discussionDto);
+        if (responseV2.getStatus().equals(ResponseStatusEnum.SUCCESS)){
+            return ResponseEntity.ok().body(responseV2);
+        }else {
+            return ResponseEntity.badRequest().body(responseV2);
         }
-
     }
 
     @GetMapping("/{discussionId}")
-    public ResponseEntity<Discussion> getDiscussionById(@PathVariable Long discussionId){
-        try {
-            Discussion discussionById = discussionService.getDiscussionById(discussionId);
-            return new ResponseEntity<>(discussionById, HttpStatus.ACCEPTED);
-        }catch (Exception e){
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<GenericResponseV2<DiscussionDto>> getDiscussionById(@PathVariable Long discussionId){
+        GenericResponseV2<DiscussionDto> response = discussionService.getDiscussionById(discussionId);
+        if (response.getStatus().equals(ResponseStatusEnum.SUCCESS)){
+            return ResponseEntity.ok().body(response);
+        }else {
+            return ResponseEntity.badRequest().body(response);
         }
     }
 
@@ -59,12 +61,13 @@ public class DiscussionController {
     }
 
     @PutMapping("/{discussionId}")
-    public ResponseEntity<Boolean> updateDiscussionById(@Valid @RequestBody Discussion discussions, @PathVariable Long discussionId){
-        try {
-            discussionService.updateDiscussionById(discussions,discussionId);
-            return new ResponseEntity<>(true, HttpStatus.ACCEPTED);
-        }catch (Exception e){
-            return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
+    public ResponseEntity<GenericResponseV2<Boolean>> updateDiscussionById(@Valid @RequestBody DiscussionDto discussionDto, @PathVariable Long discussionId){
+        GenericResponseV2<Boolean> responseV2 = discussionService.updateDiscussionById(discussionDto,discussionId);
+        if (responseV2.getStatus().equals(ResponseStatusEnum.SUCCESS)){
+            return ResponseEntity.ok().body(responseV2);
+        }else {
+            return ResponseEntity.badRequest().body(responseV2);
         }
+
     }
 }

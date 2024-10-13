@@ -4,7 +4,6 @@ import com.example.engagement_platform.common.GenericResponse;
 import com.example.engagement_platform.common.GenericResponseV2;
 import com.example.engagement_platform.common.ResponseStatusEnum;
 import com.example.engagement_platform.mappers.UserMapper;
-import com.example.engagement_platform.model.Location;
 import com.example.engagement_platform.model.PublicServant;
 import com.example.engagement_platform.model.User;
 import com.example.engagement_platform.model.UserType;
@@ -99,12 +98,22 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public User getUserById(Long userId) {
-        Optional<User> userFromDb = userRepository.findById(userId);
-        if (userFromDb.isPresent()){
-            return userFromDb.get();
-        }else {
-            throw new RuntimeException("User Not Found");
+    public GenericResponseV2<UserDto> getUserById(Long userId) {
+        try {
+            User userFromDb = userRepository.findByUserId(userId).orElseThrow(() -> new RuntimeException("User not found"));
+            UserDto response = userMapper.toDto(userFromDb);
+            return GenericResponseV2.<UserDto>builder()
+                    .status(ResponseStatusEnum.SUCCESS)
+                    .message("User retrieved successfully")
+                    ._embedded(response)
+                    .build();
+        }catch (Exception e){
+            e.printStackTrace();
+            return GenericResponseV2.<UserDto>builder()
+                    .status(ResponseStatusEnum.ERROR)
+                    .message("User not found")
+                    ._embedded(null)
+                    .build();
         }
     }
 
@@ -120,14 +129,24 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public void updateUserById(Long userId, User users) {
-        Optional<User> updateUser = userRepository.findById(userId);
-        if (updateUser.isPresent()){
-            userRepository.save(users);
-        }else{
-            throw new RuntimeException("user not found");
+    public GenericResponseV2<Boolean> updateUserById(Long userId, UserDto userDto) {
+        try {
+            User userToBeSaved = userMapper.toEntity(userDto);
+            User savedUser = userRepository.save(userToBeSaved);
+             userMapper.toDto(savedUser);
+            return GenericResponseV2.<Boolean>builder()
+                    .status(ResponseStatusEnum.SUCCESS)
+                    .message("User details updated successfully")
+                    ._embedded(true)
+                    .build();
+        }catch (Exception e){
+            e.printStackTrace();
+            return GenericResponseV2.<Boolean>builder()
+                    .status(ResponseStatusEnum.ERROR)
+                    .message("Unable to update user details")
+                    ._embedded(false)
+                    .build();
         }
-    }
-
+        }
 
 }
