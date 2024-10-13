@@ -3,6 +3,7 @@ package com.example.engagement_platform.controller;
 import com.example.engagement_platform.common.GenericResponseV2;
 import com.example.engagement_platform.common.ResponseStatusEnum;
 import com.example.engagement_platform.model.Issue;
+import com.example.engagement_platform.model.dto.response.IssueDto;
 import com.example.engagement_platform.service.IssuesService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,9 +21,9 @@ public class IssuesController {
     private final IssuesService issuesService;
 
     @GetMapping
-    public ResponseEntity<List<Issue>> getAllIssues(){
+    public ResponseEntity<GenericResponseV2<List<IssueDto>>> getAllIssues(){
         try {
-            List<Issue> issues = issuesService.getAllIssues();
+            GenericResponseV2<List<IssueDto>> issues = issuesService.getAllIssues();
             return new ResponseEntity<>(issues, HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -30,8 +31,8 @@ public class IssuesController {
     }
 
     @PostMapping
-    public ResponseEntity<GenericResponseV2<Issue>> createIssue(@Valid @RequestBody Issue issues){
-            GenericResponseV2<Issue> responseV2 = issuesService.createIssue(issues);
+    public ResponseEntity<GenericResponseV2<IssueDto>> createIssue(@Valid @RequestBody IssueDto issueDto){
+            GenericResponseV2<IssueDto> responseV2 = issuesService.createIssue(issueDto);
             if (responseV2.getStatus().equals(ResponseStatusEnum.SUCCESS)){
                 return ResponseEntity.ok().body(responseV2);
             }else {
@@ -41,13 +42,13 @@ public class IssuesController {
     }
 
     @GetMapping("/{issueId}")
-    public ResponseEntity<Issue> getIssueById(@PathVariable Long issueId){
-        try {
-            Issue issueById = issuesService.getIssueById(issueId);
-            return new ResponseEntity<>(issueById, HttpStatus.ACCEPTED);
-        }catch (Exception e){
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public ResponseEntity<GenericResponseV2<IssueDto>> getIssueById(@PathVariable Long issueId){
+            GenericResponseV2<IssueDto> issueById = issuesService.getIssueById(issueId);
+            if (issueById.getStatus().equals(ResponseStatusEnum.SUCCESS)){
+                return ResponseEntity.ok().body(issueById);
+            }else {
+                return ResponseEntity.badRequest().body(issueById);
+            }
     }
 
     @DeleteMapping("/{issueId}")

@@ -51,7 +51,7 @@ public class RsvpServiceImpl implements RsvpService {
         // step 5: save rsvp
         RSVP rsvp = RSVP.builder()
                 .rsvpStatus("BOOKED") //TODO: figure out which status go here
-                .event(event.getEventId())
+                .event(event)
                 .user(user)
                 .build();
         RSVP savedRsvp = rsvpRepository.save(rsvp);

@@ -1,14 +1,9 @@
 package com.example.engagement_platform.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.math.BigInteger;
 
 @Data
 @AllArgsConstructor
@@ -17,7 +12,10 @@ import java.math.BigInteger;
 @Table(name = "image")
 public class Image {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "image_id")
     private Long imageId;
     @Lob
-    private byte[]  imageUrl;
+    @Column(name = "image_file")
+    private byte[] imageFile;
 }

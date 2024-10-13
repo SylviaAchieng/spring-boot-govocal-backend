@@ -35,7 +35,7 @@ public class Issue {
 
     @ManyToOne
     @JoinColumn(name = "image_id")
-    private Image image;
+    private Image issueImage;
 
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(referencedColumnName = "location_id", name = "location_id")

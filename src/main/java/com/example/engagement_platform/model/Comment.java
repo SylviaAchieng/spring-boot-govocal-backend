@@ -33,6 +33,6 @@ public class Comment {
     private User user;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "discussion_id", referencedColumnName = "discussionId")
+    @JoinColumn(name = "discussion_id", referencedColumnName = "discussion_id")
     private Discussion discussion;
 }

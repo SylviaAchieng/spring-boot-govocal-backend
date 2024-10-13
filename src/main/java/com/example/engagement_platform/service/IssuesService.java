@@ -2,17 +2,18 @@ package com.example.engagement_platform.service;
 
 import com.example.engagement_platform.common.GenericResponseV2;
 import com.example.engagement_platform.model.Issue;
+import com.example.engagement_platform.model.dto.response.IssueDto;
 
 import java.util.List;
 
 public interface IssuesService {
-    List<Issue> getAllIssues();
+    GenericResponseV2<List<IssueDto>> getAllIssues();
 
-    Issue getIssueById(Long issueId);
+    GenericResponseV2<IssueDto> getIssueById(Long issueId);
 
     void deleteIssueById(Long issueId);
 
     void updateIssueById(Issue issues, Long issueId);
 
-    GenericResponseV2<Issue> createIssue(Issue issues);
+    GenericResponseV2<IssueDto> createIssue(IssueDto issueDto);
 }
