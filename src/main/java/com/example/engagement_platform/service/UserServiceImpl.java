@@ -118,14 +118,23 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public void deleteUserById(Long userId) {
-        Optional<User> userFromDatabase = userRepository.findById(userId);
-        if (userFromDatabase.isPresent()){
-            userRepository.deleteById(userId);
-        }else {
-            throw new RuntimeException("user not found");
+    public GenericResponseV2<Boolean> deleteUserById(Long userId) {
+        try {
+            User userFromDb = userRepository.findByUserId(userId).orElseThrow(() -> new RuntimeException("User not found"));
+            userRepository.delete(userFromDb);
+            return GenericResponseV2.<Boolean>builder()
+                    .status(ResponseStatusEnum.SUCCESS)
+                    .message("User deleted successfully")
+                    ._embedded(true)
+                    .build();
+        }catch (Exception e){
+            e.printStackTrace();
+            return GenericResponseV2.<Boolean>builder()
+                    .status(ResponseStatusEnum.ERROR)
+                    .message("Unable to delete user")
+                    ._embedded(false)
+                    .build();
         }
-
     }
 
     @Override

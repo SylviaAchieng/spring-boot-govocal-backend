@@ -1,17 +1,19 @@
 package com.example.engagement_platform.service;
 
+import com.example.engagement_platform.common.GenericResponseV2;
 import com.example.engagement_platform.model.Comment;
+import com.example.engagement_platform.model.dto.response.CommentDto;
 
 import java.util.List;
 
 public interface CommentService {
-    List<Comment> getAllComments();
+    GenericResponseV2<List<CommentDto>> getAllComments();
 
-    Comment createComment(Comment comments);
+    GenericResponseV2<CommentDto> createComment(CommentDto commentDto);
 
-    Comment getCommentById(Long commentId);
+    GenericResponseV2<CommentDto> getCommentById(Long commentId);
 
-    void deleteCommentById(Long commentId);
+    GenericResponseV2<Boolean> deleteCommentById(Long commentId);
 
-    void updateCommentById(Long commentId, Comment comments);
+    GenericResponseV2<Boolean> updateCommentById(Long commentId, CommentDto commentDto);
 }

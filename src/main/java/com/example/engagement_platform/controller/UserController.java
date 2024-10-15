@@ -3,7 +3,6 @@ package com.example.engagement_platform.controller;
 import com.example.engagement_platform.common.GenericResponse;
 import com.example.engagement_platform.common.GenericResponseV2;
 import com.example.engagement_platform.common.ResponseStatusEnum;
-import com.example.engagement_platform.model.User;
 import com.example.engagement_platform.model.dto.UserDto;
 import com.example.engagement_platform.service.UserService;
 import jakarta.validation.Valid;
@@ -60,14 +59,13 @@ public class UserController {
     }
 
     @DeleteMapping("/{userId}")
-    public ResponseEntity<Boolean> deleteUserById(@PathVariable Long userId){
-        try {
-            userService.deleteUserById(userId);
-            return new ResponseEntity<>(true, HttpStatus.ACCEPTED);
-        }catch (Exception e){
-            return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
+    public ResponseEntity<GenericResponseV2<Boolean>> deleteUserById(@PathVariable Long userId){
+        GenericResponseV2<Boolean> responseV2 = userService.deleteUserById(userId);
+        if (responseV2.getStatus().equals(ResponseStatusEnum.SUCCESS)){
+            return ResponseEntity.ok().body(responseV2);
+        }else {
+            return ResponseEntity.badRequest().body(responseV2);
         }
-
     }
 
     @PutMapping("/{userId}")

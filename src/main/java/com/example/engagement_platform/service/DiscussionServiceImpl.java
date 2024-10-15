@@ -85,12 +85,22 @@ public class DiscussionServiceImpl implements DiscussionService{
     }
 
     @Override
-    public void deleteDiscussionById(Long discussionId) {
-        Optional<Discussion> discussionFrDb = discussionRepository.findById(discussionId);
-        if (discussionFrDb.isPresent()){
-            discussionRepository.deleteById(discussionId);
-        }else{
-            throw new RuntimeException("Discussion not found");
+    public GenericResponseV2<Boolean> deleteDiscussionById(Long discussionId) {
+        try {
+            Discussion discussionFromDb = discussionRepository.findByDiscussionId(discussionId).orElseThrow(() -> new RuntimeException("Discussion not found"));
+            discussionRepository.delete(discussionFromDb);
+            return GenericResponseV2.<Boolean>builder()
+                    .status(ResponseStatusEnum.SUCCESS)
+                    .message("Discussion deleted successfully")
+                    ._embedded(true)
+                    .build();
+        }catch (Exception e){
+            e.printStackTrace();
+            return GenericResponseV2.<Boolean>builder()
+                    .status(ResponseStatusEnum.ERROR)
+                    .message("Unable to delete discussion")
+                    ._embedded(false)
+                    .build();
         }
     }
 

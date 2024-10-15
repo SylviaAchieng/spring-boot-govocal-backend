@@ -1,6 +1,9 @@
 package com.example.engagement_platform.controller;
 
+import com.example.engagement_platform.common.GenericResponseV2;
+import com.example.engagement_platform.common.ResponseStatusEnum;
 import com.example.engagement_platform.model.Notification;
+import com.example.engagement_platform.model.dto.response.NotificationDto;
 import com.example.engagement_platform.service.NotificationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,53 +22,54 @@ public class NotificationController {
     private final NotificationService notificationService;
 
     @GetMapping
-    public ResponseEntity<List<Notification>> getAllNotifications(){
-        try {
-            List<Notification> notifications = notificationService.getAllNotifications();
-            return new ResponseEntity<>(notifications, HttpStatus.OK);
-        }catch (Exception e){
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<GenericResponseV2<List<NotificationDto>>> getAllNotifications(){
+        GenericResponseV2<List<NotificationDto>> response = notificationService.getAllNotifications();
+        if (response.getStatus().equals(ResponseStatusEnum.SUCCESS)){
+            return ResponseEntity.ok().body(response);
+        }else {
+            return ResponseEntity.badRequest().body(response);
         }
     }
 
     @PostMapping
-    public ResponseEntity<Notification> createNotification(@Valid @RequestBody Notification notifications){
-        try {
-            Notification createdNotification = notificationService.createNotification(notifications);
-            return new ResponseEntity<>(createdNotification, HttpStatus.CREATED);
-        }catch (Exception e){
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<GenericResponseV2<NotificationDto>> createNotification(@Valid @RequestBody NotificationDto notificationDto){
+        GenericResponseV2<NotificationDto> responseV2 = notificationService.createNotification(notificationDto);
+        if (responseV2.getStatus().equals(ResponseStatusEnum.SUCCESS)){
+            return ResponseEntity.ok().body(responseV2);
+        }else {
+            return ResponseEntity.badRequest().body(responseV2);
         }
 
     }
 
     @GetMapping("/{notificationId}")
-    public ResponseEntity<Notification> getNotificationById(@PathVariable Long notificationId){
-        try {
-            Notification notificationById = notificationService.getNotificationById(notificationId);
-            return new ResponseEntity<>(notificationById, HttpStatus.ACCEPTED);
-        }catch (Exception e){
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<GenericResponseV2<NotificationDto>> getNotificationById(@PathVariable Long notificationId){
+        GenericResponseV2<NotificationDto> responseV2 = notificationService.getNotificationById(notificationId);
+        if (responseV2.getStatus().equals(ResponseStatusEnum.SUCCESS)){
+            return ResponseEntity.ok().body(responseV2);
+        }else {
+            return ResponseEntity.badRequest().body(responseV2);
         }
+
     }
 
     @DeleteMapping("/{notificationId}")
-    public ResponseEntity<Boolean> deleteNotificationById(@PathVariable Long notificationId){
-        try {
-            notificationService.deleteNotificationById(notificationId);
-            return new ResponseEntity<>(true, HttpStatus.ACCEPTED);
-        }catch (Exception e){
-            return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
+    public ResponseEntity<GenericResponseV2<Boolean>> deleteNotificationById(@PathVariable Long notificationId){
+        GenericResponseV2<Boolean> responseV2 = notificationService.deleteNotificationById(notificationId);
+        if (responseV2.getStatus().equals(ResponseStatusEnum.SUCCESS)){
+            return ResponseEntity.ok().body(responseV2);
+        }else {
+            return ResponseEntity.badRequest().body(responseV2);
         }
     }
 
     @PutMapping("/{notificationId}")
-    public ResponseEntity<Boolean> updateNotificationById(@Valid @RequestBody Notification notifications, @PathVariable Long notificationId){
-        try {
-            notificationService.updateNotificationById(notifications, notificationId);
-            return new ResponseEntity<>(true, HttpStatus.ACCEPTED);
-        }catch (Exception e){
-            return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
+    public ResponseEntity<GenericResponseV2<Boolean>> updateNotificationById(@Valid @RequestBody NotificationDto notificationDto, @PathVariable Long notificationId){
+        GenericResponseV2<Boolean> responseV2 = notificationService.updateNotificationById(notificationDto, notificationId);
+        if (responseV2.getStatus().equals(ResponseStatusEnum.SUCCESS)){
+            return ResponseEntity.ok().body(responseV2);
+        }else {
+            return ResponseEntity.badRequest().body(responseV2);
         }
     }
 }

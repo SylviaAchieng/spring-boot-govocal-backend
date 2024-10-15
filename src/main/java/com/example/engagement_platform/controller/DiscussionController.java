@@ -51,12 +51,12 @@ public class DiscussionController {
     }
 
     @DeleteMapping("/{discussionId}")
-    public ResponseEntity<Boolean> deleteDiscussionById(@PathVariable Long discussionId){
-        try {
-            discussionService.deleteDiscussionById(discussionId);
-            return new ResponseEntity<>(true, HttpStatus.ACCEPTED);
-        }catch (Exception e){
-            return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
+    public ResponseEntity<GenericResponseV2<Boolean>> deleteDiscussionById(@PathVariable Long discussionId){
+        GenericResponseV2<Boolean> responseV2 = discussionService.deleteDiscussionById(discussionId);
+        if (responseV2.getStatus().equals(ResponseStatusEnum.SUCCESS)){
+            return ResponseEntity.ok().body(responseV2);
+        }else {
+            return ResponseEntity.badRequest().body(responseV2);
         }
     }
 

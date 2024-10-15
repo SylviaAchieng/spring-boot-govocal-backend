@@ -15,7 +15,7 @@ public interface UserService {
 
     GenericResponseV2<UserDto> getUserById(Long userId);
 
-    void deleteUserById(Long userId);
+    GenericResponseV2<Boolean> deleteUserById(Long userId);
 
     GenericResponseV2<Boolean> updateUserById(Long userId, UserDto userDto);
 

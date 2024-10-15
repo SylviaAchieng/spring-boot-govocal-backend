@@ -52,12 +52,12 @@ public class IssuesController {
     }
 
     @DeleteMapping("/{issueId}")
-    public ResponseEntity<Boolean> deleteIssueById(@PathVariable Long issueId){
-        try {
-            issuesService.deleteIssueById(issueId);
-            return new ResponseEntity<>(true, HttpStatus.ACCEPTED);
-        }catch (Exception e){
-            return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
+    public ResponseEntity<GenericResponseV2<Boolean>> deleteIssueById(@PathVariable Long issueId){
+        GenericResponseV2<Boolean> responseV2 = issuesService.deleteIssueById(issueId);
+        if (responseV2.getStatus().equals(ResponseStatusEnum.SUCCESS)){
+            return ResponseEntity.ok().body(responseV2);
+        }else {
+            return ResponseEntity.badRequest().body(responseV2);
         }
     }
 

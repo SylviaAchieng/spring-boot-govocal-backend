@@ -71,12 +71,22 @@ public class IssueServiceImpl implements IssuesService{
     }
 
     @Override
-    public void deleteIssueById(Long issueId) {
-        Optional<Issue> issueFrDb = issueRepository.findById(issueId);
-        if (issueFrDb.isPresent()){
-            issueRepository.deleteById(issueId);
-        }else{
-            throw new RuntimeException("Issue not found");
+    public GenericResponseV2<Boolean> deleteIssueById(Long issueId) {
+        try {
+            Issue issueFromDb = issueRepository.findByIssueId(issueId).orElseThrow(() -> new RuntimeException("Issue not found"));
+            issueRepository.delete(issueFromDb);
+            return GenericResponseV2.<Boolean>builder()
+                    .status(ResponseStatusEnum.SUCCESS)
+                    .message("Issue deleted successfully")
+                    ._embedded(true)
+                    .build();
+        }catch (Exception e){
+            e.printStackTrace();
+            return GenericResponseV2.<Boolean>builder()
+                    .status(ResponseStatusEnum.ERROR)
+                    .message("Unable to delete issue")
+                    ._embedded(false)
+                    .build();
         }
     }
 

@@ -1,56 +1,125 @@
 package com.example.engagement_platform.service;
 
+import com.example.engagement_platform.common.GenericResponseV2;
+import com.example.engagement_platform.common.ResponseStatusEnum;
+import com.example.engagement_platform.mappers.CommentMapper;
 import com.example.engagement_platform.model.Comment;
+import com.example.engagement_platform.model.dto.response.CommentDto;
 import com.example.engagement_platform.repository.CommentRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService{
 
-    @Autowired
-    private CommentRepository commentRepository;
+    private final CommentRepository commentRepository;
+    private final CommentMapper commentMapper;
 
     @Override
-    public List<Comment> getAllComments() {
-        return commentRepository.findAll();
-    }
-
-    @Override
-    public Comment createComment(Comment comments) {
-        return commentRepository.save(comments);
-    }
-
-    @Override
-    public Comment getCommentById(Long commentId) {
-        Optional<Comment> commentFrDb = commentRepository.findById(commentId);
-        if (commentFrDb.isPresent()){
-            return commentFrDb.get();
-        }else {
-            throw new RuntimeException("Comment not Found");
+    public GenericResponseV2<List<CommentDto>> getAllComments() {
+        try {
+            List<CommentDto> response = commentRepository.findAll()
+                    .stream()
+                    .map(commentMapper::toDto)
+                    .toList();
+            return GenericResponseV2.<List<CommentDto>>builder()
+                    .status(ResponseStatusEnum.SUCCESS)
+                    .message("Comments retrieved successfully")
+                    ._embedded(response)
+                    .build();
+        }catch (Exception e){
+            e.printStackTrace();
+            return GenericResponseV2.<List<CommentDto>>builder()
+                    .status(ResponseStatusEnum.ERROR)
+                    .message("Unable to retrieve comments")
+                    ._embedded(null)
+                    .build();
         }
     }
 
     @Override
-    public void deleteCommentById(Long commentId) {
-        Optional<Comment> commentFromDb = commentRepository.findById(commentId);
-        if (commentFromDb.isPresent()){
-            commentRepository.deleteById(commentId);
-        }else {
-            throw new RuntimeException("Comment not found");
+    public GenericResponseV2<CommentDto> createComment(CommentDto commentDto) {
+        try {
+            Comment commentToBeSaved = commentMapper.toEntity(commentDto);
+            Comment savedComment = commentRepository.save(commentToBeSaved);
+            CommentDto response = commentMapper.toDto(savedComment);
+            return GenericResponseV2.<CommentDto>builder()
+                    .status(ResponseStatusEnum.SUCCESS)
+                    .message("Comment created successfully")
+                    ._embedded(response)
+                    .build();
+        }catch (Exception e){
+            e.printStackTrace();
+            return GenericResponseV2.<CommentDto>builder()
+                    .status(ResponseStatusEnum.ERROR)
+                    .message("Unable to create comment")
+                    ._embedded(null)
+                    .build();
         }
     }
 
     @Override
-    public void updateCommentById(Long commentId, Comment comments) {
-        Optional<Comment> commentsFrDb = commentRepository.findById(commentId);
-        if (commentsFrDb.isPresent()){
-            commentRepository.save(comments);
-        }else {
-            throw new RuntimeException("Comment not Found");
+    public GenericResponseV2<CommentDto> getCommentById(Long commentId) {
+        try {
+            Comment commentFromDb = commentRepository.findByCommentId(commentId).orElseThrow(() -> new RuntimeException("Comment not found"));
+            CommentDto response = commentMapper.toDto(commentFromDb);
+            return GenericResponseV2.<CommentDto>builder()
+                    .status(ResponseStatusEnum.SUCCESS)
+                    .message("Comment retrieved successfully")
+                    ._embedded(response)
+                    .build();
+        }catch (Exception e){
+            e.printStackTrace();
+            return GenericResponseV2.<CommentDto>builder()
+                    .status(ResponseStatusEnum.ERROR)
+                    .message("Unable to retrieve comment")
+                    ._embedded(null)
+                    .build();
         }
     }
+
+    @Override
+    public GenericResponseV2<Boolean> deleteCommentById(Long commentId) {
+        try {
+            Comment commentFromDb = commentRepository.findByCommentId(commentId).orElseThrow(() -> new RuntimeException("Comment not found"));
+            commentRepository.delete(commentFromDb);
+            return GenericResponseV2.<Boolean>builder()
+                    .status(ResponseStatusEnum.SUCCESS)
+                    .message("Comment deleted successfully")
+                    ._embedded(true)
+                    .build();
+        }catch (Exception e){
+            e.printStackTrace();
+            return GenericResponseV2.<Boolean>builder()
+                    .status(ResponseStatusEnum.ERROR)
+                    .message("Unable to delete comment")
+                    ._embedded(false)
+                    .build();
+        }
+    }
+
+    @Override
+    public GenericResponseV2<Boolean> updateCommentById(Long commentId, CommentDto commentDto) {
+        try {
+            Comment commentToSave = commentMapper.toEntity(commentDto);
+            Comment savedComment  = commentRepository.save(commentToSave);
+            commentMapper.toDto(savedComment);
+            return GenericResponseV2.<Boolean>builder()
+                    .status(ResponseStatusEnum.SUCCESS)
+                    .message("Comment saved successfully")
+                    ._embedded(true)
+                    .build();
+        }catch (Exception e){
+            e.printStackTrace();
+            return GenericResponseV2.<Boolean>builder()
+                    .status(ResponseStatusEnum.ERROR)
+                    .message("Unable to save comment")
+                    ._embedded(null)
+                    .build();
+        }
+        }
 }

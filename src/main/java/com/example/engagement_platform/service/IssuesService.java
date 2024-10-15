@@ -11,7 +11,7 @@ public interface IssuesService {
 
     GenericResponseV2<IssueDto> getIssueById(Long issueId);
 
-    void deleteIssueById(Long issueId);
+    GenericResponseV2<Boolean> deleteIssueById(Long issueId);
 
     GenericResponseV2<Boolean> updateIssueById(IssueDto issueDto, Long issueId);
 

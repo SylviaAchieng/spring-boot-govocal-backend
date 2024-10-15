@@ -1,6 +1,9 @@
 package com.example.engagement_platform.controller;
 
+import com.example.engagement_platform.common.GenericResponseV2;
+import com.example.engagement_platform.common.ResponseStatusEnum;
 import com.example.engagement_platform.model.Event;
+import com.example.engagement_platform.model.dto.response.EventDto;
 import com.example.engagement_platform.service.EventService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,53 +21,55 @@ public class EventController {
     private final EventService eventService;
 
     @GetMapping
-    public ResponseEntity<List<Event>> getAllEvents(){
-        try {
-            List<Event> events = eventService.getAllEvents();
-            return new ResponseEntity<>(events, HttpStatus.OK);
-        }catch (Exception e){
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<GenericResponseV2<List<EventDto>>> getAllEvents(){
+        GenericResponseV2<List<EventDto>> response = eventService.getAllEvents();
+        if (response.getStatus().equals(ResponseStatusEnum.SUCCESS)){
+            return ResponseEntity.ok().body(response);
+        }else {
+            return ResponseEntity.badRequest().body(response);
         }
     }
 
     @PostMapping
-    public ResponseEntity<Event> createEvent(@Valid @RequestBody Event events){
-        try {
-            Event createdEvent = eventService.createEvent(events);
-            return new ResponseEntity<>(createdEvent, HttpStatus.CREATED);
-        }catch (Exception e){
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<GenericResponseV2<EventDto>> createEvent(@Valid @RequestBody EventDto eventDto){
+        GenericResponseV2<EventDto> responseV2 = eventService.createEvent(eventDto);
+        if (responseV2.getStatus().equals(ResponseStatusEnum.SUCCESS)){
+            return ResponseEntity.ok().body(responseV2);
+        }else {
+            return ResponseEntity.ok().body(responseV2);
         }
 
     }
 
     @GetMapping("/{eventId}")
-    public ResponseEntity<Event> getEventById(@PathVariable Long eventId){
-        try {
-            Event eventById = eventService.getEventById(eventId);
-            return new ResponseEntity<>(eventById, HttpStatus.ACCEPTED);
-        }catch (Exception e){
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<GenericResponseV2<EventDto>> getEventById(@PathVariable Long eventId){
+        GenericResponseV2<EventDto> responseV2 = eventService.getEventById(eventId);
+        if (responseV2.getStatus().equals(ResponseStatusEnum.SUCCESS)){
+            return ResponseEntity.ok().body(responseV2);
+        }else {
+            return ResponseEntity.badRequest().body(responseV2);
         }
+
     }
 
     @DeleteMapping("/{eventId}")
-    public ResponseEntity<Boolean> deleteEventById(@PathVariable Long eventId){
-        try {
-            eventService.deleteEventById(eventId);
-            return new ResponseEntity<>(true, HttpStatus.ACCEPTED);
-        }catch (Exception e){
-            return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
+    public ResponseEntity<GenericResponseV2<Boolean>> deleteEventById(@PathVariable Long eventId){
+        GenericResponseV2<Boolean> responseV2 = eventService.deleteEventById(eventId);
+        if (responseV2.getStatus().equals(ResponseStatusEnum.SUCCESS)){
+            return ResponseEntity.ok().body(responseV2);
+        }else {
+            return ResponseEntity.badRequest().body(responseV2);
         }
     }
 
     @PutMapping("/{eventId}")
-    public ResponseEntity<Boolean> updateEventById(@Valid @RequestBody Event events, @PathVariable Long eventId){
-        try {
-            eventService.updateEventById(events,eventId);
-            return new ResponseEntity<>(true, HttpStatus.ACCEPTED);
-        }catch (Exception e){
-            return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
+    public ResponseEntity<GenericResponseV2<Boolean>> updateEventById(@Valid @RequestBody EventDto eventDto, @PathVariable Long eventId){
+        GenericResponseV2<Boolean> response = eventService.updateEventById(eventDto,eventId);
+        if (response.getStatus().equals(ResponseStatusEnum.SUCCESS)){
+            return ResponseEntity.ok().body(response);
+        }else {
+            return ResponseEntity.badRequest().body(response);
         }
     }
+
 }

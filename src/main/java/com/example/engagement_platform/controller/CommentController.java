@@ -1,6 +1,9 @@
 package com.example.engagement_platform.controller;
 
+import com.example.engagement_platform.common.GenericResponseV2;
+import com.example.engagement_platform.common.ResponseStatusEnum;
 import com.example.engagement_platform.model.Comment;
+import com.example.engagement_platform.model.dto.response.CommentDto;
 import com.example.engagement_platform.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,52 +20,53 @@ public class CommentController {
     private final CommentService commentService;
 
     @GetMapping
-    public ResponseEntity<List<Comment>> getAllComments(){
-        try {
-            List<Comment> comments = commentService.getAllComments();
-            return new ResponseEntity<>(comments, HttpStatus.OK);
-        }catch (Exception e){
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<GenericResponseV2<List<CommentDto>>> getAllComments(){
+        GenericResponseV2<List<CommentDto>> response = commentService.getAllComments();
+        if (response.getStatus().equals(ResponseStatusEnum.SUCCESS)){
+            return ResponseEntity.ok().body(response);
+        }else {
+            return ResponseEntity.ok().body(response);
         }
+
     }
 
     @PostMapping
-    public ResponseEntity<Comment> createComment(@RequestBody Comment comments){
-        try {
-            Comment createdComment = commentService.createComment(comments);
-            return new ResponseEntity<>(createdComment, HttpStatus.CREATED);
-        }catch (Exception e){
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<GenericResponseV2<CommentDto>> createComment(@RequestBody CommentDto commentDto){
+        GenericResponseV2<CommentDto> response = commentService.createComment(commentDto);
+        if (response.getStatus().equals(ResponseStatusEnum.SUCCESS)){
+            return ResponseEntity.ok().body(response);
+        }else {
+            return ResponseEntity.badRequest().body(response);
         }
     }
 
     @GetMapping("/{commentId}")
-    public ResponseEntity<Comment> getCommentById(@PathVariable Long commentId){
-        try {
-            Comment commentById = commentService.getCommentById(commentId);
-            return new ResponseEntity<>(commentById, HttpStatus.ACCEPTED);
-        }catch (Exception e){
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<GenericResponseV2<CommentDto>> getCommentById(@PathVariable Long commentId){
+        GenericResponseV2<CommentDto> response = commentService.getCommentById(commentId);
+        if (response.getStatus().equals(ResponseStatusEnum.SUCCESS)){
+            return ResponseEntity.ok().body(response);
+        }else {
+            return ResponseEntity.badRequest().body(response);
         }
     }
 
     @DeleteMapping("/{commentId}")
-    public ResponseEntity<Boolean> deleteCommentById(@PathVariable Long commentId){
-        try {
-            commentService.deleteCommentById(commentId);
-            return new ResponseEntity<>(true, HttpStatus.ACCEPTED);
-        }catch (Exception e){
-            return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
+    public ResponseEntity<GenericResponseV2<Boolean>> deleteCommentById(@PathVariable Long commentId){
+        GenericResponseV2<Boolean> responseV2 = commentService.deleteCommentById(commentId);
+        if (responseV2.getStatus().equals(ResponseStatusEnum.SUCCESS)){
+            return ResponseEntity.ok().body(responseV2);
+        }else {
+            return ResponseEntity.badRequest().body(responseV2);
         }
     }
 
     @PutMapping("/{commentId}")
-    public ResponseEntity<Boolean> updateCommentById(@RequestBody Comment comments, @PathVariable Long commentId){
-        try {
-            commentService.updateCommentById(commentId, comments);
-            return new ResponseEntity<>(true, HttpStatus.ACCEPTED);
-        }catch (Exception e){
-            return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
+    public ResponseEntity<GenericResponseV2<Boolean>> updateCommentById(@RequestBody CommentDto commentDto, @PathVariable Long commentId){
+        GenericResponseV2<Boolean> response = commentService.updateCommentById(commentId, commentDto);
+        if (response.getStatus().equals(ResponseStatusEnum.SUCCESS)){
+            return ResponseEntity.ok().body(response);
+        }else {
+            return ResponseEntity.ok().body(response);
         }
     }
 }
