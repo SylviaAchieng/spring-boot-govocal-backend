@@ -18,10 +18,10 @@ import java.util.function.Function;
 @Service
 public class JwtService {
 
-    @Value("${security.jwt.expiration}")
-    private long jwtExpiration;
-    @Value("${security.jwt.secret-key}")
-    private String secretKey;
+    //@Value("${security.jwt.expiration}")
+    private long jwtExpiration = 8640000;
+    //@Value("${security.jwt.secret-key}")
+    private String secretKey = "8c6c32b90a58f606d3ab96c10a7e2e5684eab1e15a72332842dbac503ed3cbbcdfbd8942f5a6eabc299ce704cc0c409db1635612ae8922219a511da8afd86a559652180295bd61a408119ced81b772b5a677156579d86e579cbaf62c59d2b9a82fe106e0b5f5f677ec44a5a0e6819cd85c652f08e2996dcfe4764fbbf394128c3a836e6f6b9c85873c57c2fd58eef0cbf17032c2770046684a4509afd9f7d87905c90201c31e97662f276e7976f468672f87ad09074391f1775dbecc9c32cd6e9f0c41475d663f5f2af018da98d886eb5e47ee7a46a224c60b4811e2edb205da5ad4cd070230ced55d11961221275630f26099731d739f6e78370575770f8017";
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -46,8 +46,10 @@ public class JwtService {
         return generateToken(new HashMap<>(), userDetails);
     }
 
-    private String generateToken(Map<String, Object> claims, UserDetails userDetails) {
-
+    public String generateToken(Map<String, Object> claims, UserDetails userDetails) {
+        if (claims == null) {
+            claims = new HashMap<>();
+        }
         return buildToken(claims, userDetails, jwtExpiration);
     }
 
@@ -62,10 +64,10 @@ public class JwtService {
                 .toList();
         return Jwts
                 .builder()
-                .setClaims(extraClaims)
-                .setSubject(userDetails.getUsername())
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration))
+                .claims(extraClaims)
+                .subject(userDetails.getUsername())
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + jwtExpiration))
                 .claim("authorities", authorities)
                 .signWith(getSignInKey())
                 .compact();

@@ -3,8 +3,12 @@ package com.example.engagement_platform.controller;
 import com.example.engagement_platform.common.GenericResponse;
 import com.example.engagement_platform.common.GenericResponseV2;
 import com.example.engagement_platform.common.ResponseStatusEnum;
+import com.example.engagement_platform.model.Token;
+import com.example.engagement_platform.model.dto.AuthResponseDto;
 import com.example.engagement_platform.model.dto.UserDto;
+import com.example.engagement_platform.model.dto.request.AuthRequest;
 import com.example.engagement_platform.service.UserService;
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,6 +29,24 @@ public class UserController {
 //    public String greetings(){
 //        return "Hello Sylvia, Welcome to Civic";
 //    }
+
+    @PostMapping("/auth")
+    public ResponseEntity<GenericResponseV2<AuthResponseDto>> authenticate(@RequestBody @Valid AuthRequest request){
+        GenericResponseV2<AuthResponseDto> response = userService.authenticate(request);
+        if (response.getStatus().equals(ResponseStatusEnum.SUCCESS)){
+            return ResponseEntity.ok().body(response);
+        }else {
+            return ResponseEntity.badRequest().body(response);
+        }
+
+    }
+
+    @GetMapping("/activate-account")
+    public void confirm(
+            @RequestParam String token
+    ) throws MessagingException {
+        userService.activateAccount(token);
+    }
 
     @GetMapping
     public ResponseEntity<GenericResponseV2<List<UserDto>>> getAllUsers(){
