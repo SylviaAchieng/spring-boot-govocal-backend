@@ -4,6 +4,8 @@ import com.example.engagement_platform.model.PublicServant;
 import com.example.engagement_platform.model.UserType;
 import com.example.engagement_platform.model.dto.request.PublicServantDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.Access;
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -32,6 +34,7 @@ public class UserDto {
     @NotNull(message = "user email is mandatory")
     private String email;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @NotNull(message = "password is mandatory")
     @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,20}$",
             message = "Password must be 8-20 characters long, contain at least one digit, one lowercase letter, one uppercase letter, one special character, and have no whitespace")

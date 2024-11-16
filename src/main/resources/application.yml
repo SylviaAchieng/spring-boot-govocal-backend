@@ -13,8 +13,26 @@ spring:
     hibernate:
       ddl-auto: none
 
+  mail:
+    host: smtp.your-email-provider.com
+    port: 587
+    username: your-email@example.com
+    password: your-email-password
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
 
-    security:
-      jwt:
-        secret-key: 8c6c32b90a58f606d3ab96c10a7e2e5684eab1e15a72332842dbac503ed3cbbcdfbd8942f5a6eabc299ce704cc0c409db1635612ae8922219a511da8afd86a559652180295bd61a408119ced81b772b5a677156579d86e579cbaf62c59d2b9a82fe106e0b5f5f677ec44a5a0e6819cd85c652f08e2996dcfe4764fbbf394128c3a836e6f6b9c85873c57c2fd58eef0cbf17032c2770046684a4509afd9f7d87905c90201c31e97662f276e7976f468672f87ad09074391f1775dbecc9c32cd6e9f0c41475d663f5f2af018da98d886eb5e47ee7a46a224c60b4811e2edb205da5ad4cd070230ced55d11961221275630f26099731d739f6e78370575770f8017
-        expiration: 8640000
+
+  thymeleaf:
+    prefix: classpath:/templates/  # Ensures that the Thymeleaf templates can be found here
+    suffix: .html                  # Thymeleaf template files should end with .html
+    mode: HTML                     # Defines template mode
+    encoding: UTF-8                # Encoding for template files
+    cache: true
