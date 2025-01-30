@@ -36,3 +36,9 @@ spring:
     mode: HTML                     # Defines template mode
     encoding: UTF-8                # Encoding for template files
     cache: true
+
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG

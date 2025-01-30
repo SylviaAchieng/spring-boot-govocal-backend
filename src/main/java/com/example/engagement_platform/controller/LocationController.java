@@ -6,6 +6,7 @@ import com.example.engagement_platform.common.ResponseStatusEnum;
 import com.example.engagement_platform.model.Location;
 import com.example.engagement_platform.model.dto.response.LocationDto;
 import com.example.engagement_platform.service.LocationService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +18,7 @@ import java.util.List;
 @RequestMapping("/api/v1/location")
 public class LocationController {
     private final LocationService locationService;
-
+    @Operation(summary = "create location")
     @PostMapping
     public ResponseEntity<GenericResponse> createLocation(@RequestBody Location location){
         GenericResponse response = locationService.createLocation(location);
@@ -27,7 +28,7 @@ public class LocationController {
             return ResponseEntity.badRequest().body(response);
         }
     }
-
+    @Operation(summary = "get all locations")
     @GetMapping
     public ResponseEntity<GenericResponseV2<List<LocationDto>>> getAllLocations(){
         GenericResponseV2<List<LocationDto>> response = locationService.getAllLocations();
@@ -37,7 +38,7 @@ public class LocationController {
             return ResponseEntity.badRequest().body(response);
         }
     }
-
+    @Operation(summary = "get location by id")
     @GetMapping("{locationId}")
     public ResponseEntity<GenericResponseV2<LocationDto>> getLocationById(@PathVariable Long locationId){
         GenericResponseV2<LocationDto> responseV2 = locationService.getLocationById(locationId);
@@ -47,7 +48,7 @@ public class LocationController {
             return ResponseEntity.badRequest().body(responseV2);
         }
     }
-
+    @Operation(summary = "update location by id")
     @PutMapping
     public ResponseEntity<GenericResponseV2<Boolean>> updateLocationById(
             @RequestParam(name = "locationId") Long locationId,

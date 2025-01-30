@@ -5,6 +5,7 @@ import com.example.engagement_platform.common.ResponseStatusEnum;
 import com.example.engagement_platform.model.Issue;
 import com.example.engagement_platform.model.dto.response.IssueDto;
 import com.example.engagement_platform.service.IssuesService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,7 +20,7 @@ import java.util.List;
 public class IssuesController {
 
     private final IssuesService issuesService;
-
+    @Operation(summary = "get all issues")
     @GetMapping
     public ResponseEntity<GenericResponseV2<List<IssueDto>>> getAllIssues(){
         try {
@@ -29,7 +30,7 @@ public class IssuesController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
+    @Operation(summary = "create issue")
     @PostMapping
     public ResponseEntity<GenericResponseV2<IssueDto>> createIssue(@Valid @RequestBody IssueDto issueDto){
             GenericResponseV2<IssueDto> responseV2 = issuesService.createIssue(issueDto);
@@ -40,7 +41,7 @@ public class IssuesController {
             }
 
     }
-
+    @Operation(summary = "get issue by id")
     @GetMapping("/{issueId}")
     public ResponseEntity<GenericResponseV2<IssueDto>> getIssueById(@PathVariable Long issueId){
             GenericResponseV2<IssueDto> issueById = issuesService.getIssueById(issueId);
@@ -50,7 +51,7 @@ public class IssuesController {
                 return ResponseEntity.badRequest().body(issueById);
             }
     }
-
+    @Operation(summary = "delete issue by id")
     @DeleteMapping("/{issueId}")
     public ResponseEntity<GenericResponseV2<Boolean>> deleteIssueById(@PathVariable Long issueId){
         GenericResponseV2<Boolean> responseV2 = issuesService.deleteIssueById(issueId);
@@ -60,7 +61,7 @@ public class IssuesController {
             return ResponseEntity.badRequest().body(responseV2);
         }
     }
-
+    @Operation(summary = "update issue by id")
     @PutMapping("/{issueId}")
     public ResponseEntity<GenericResponseV2<Boolean>> updateIssueById(@Valid @RequestBody IssueDto issueDto, @PathVariable Long issueId){
             GenericResponseV2<Boolean> responseV2 = issuesService.updateIssueById(issueDto,issueId);

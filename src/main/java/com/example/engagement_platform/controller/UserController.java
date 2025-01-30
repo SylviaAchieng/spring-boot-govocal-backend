@@ -8,6 +8,7 @@ import com.example.engagement_platform.model.dto.AuthResponseDto;
 import com.example.engagement_platform.model.dto.UserDto;
 import com.example.engagement_platform.model.dto.request.AuthRequest;
 import com.example.engagement_platform.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +31,7 @@ public class UserController {
 //        return "Hello Sylvia, Welcome to Civic";
 //    }
 
+    @Operation(summary = "authorise user")
     @PostMapping("/auth")
     public ResponseEntity<GenericResponseV2<AuthResponseDto>> authenticate(@RequestBody @Valid AuthRequest request){
         GenericResponseV2<AuthResponseDto> response = userService.authenticate(request);
@@ -41,6 +43,7 @@ public class UserController {
 
     }
 
+    @Operation(summary = "activate account")
     @GetMapping("/activate-account")
     public void confirm(
             @RequestParam String token
@@ -48,6 +51,7 @@ public class UserController {
         userService.activateAccount(token);
     }
 
+    @Operation(summary = "get all users")
     @GetMapping
     public ResponseEntity<GenericResponseV2<List<UserDto>>> getAllUsers(){
              GenericResponseV2<List<UserDto>> responseV2 = userService.getAllUsers();
@@ -58,6 +62,7 @@ public class UserController {
              }
     }
 
+    @Operation(summary = "add a new user")
     @PostMapping
     public ResponseEntity<GenericResponse> addUsers(@Valid @RequestBody UserDto users){
             GenericResponse response = userService.addUsers(users);
@@ -68,6 +73,7 @@ public class UserController {
             }
     }
 
+    @Operation(summary = "get user by id")
     @GetMapping("/{userId}")
     public ResponseEntity<GenericResponseV2<UserDto>> getUserById(@PathVariable Long userId){
         GenericResponseV2<UserDto> responseV2 = userService.getUserById(userId);
@@ -79,7 +85,7 @@ public class UserController {
 
 
     }
-
+    @Operation(summary = "delete user by id")
     @DeleteMapping("/{userId}")
     public ResponseEntity<GenericResponseV2<Boolean>> deleteUserById(@PathVariable Long userId){
         GenericResponseV2<Boolean> responseV2 = userService.deleteUserById(userId);
@@ -89,7 +95,7 @@ public class UserController {
             return ResponseEntity.badRequest().body(responseV2);
         }
     }
-
+    @Operation(summary = "update user by id")
     @PutMapping("/{userId}")
     public ResponseEntity<GenericResponseV2<Boolean>> updateUserById(@Valid @RequestBody UserDto userDto, @PathVariable Long userId){
         GenericResponseV2<Boolean> responseV2 = userService.updateUserById(userId, userDto);

@@ -18,6 +18,7 @@ import org.springframework.web.servlet.function.ServerRequest;
 
 
 import java.io.IOException;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -26,14 +27,28 @@ public class JwtFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
 
+    // List of paths to exclude from filtering
+    private static final List<String> EXCLUDED_PATHS = List.of(
+            "/swagger-ui",
+            "/v3/api-docs",
+            "/swagger-resources",
+            "/webjars",
+            "/swagger-ui.html"
+    );
+
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
                                     @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
-//        if (request.getServletPath().contains("/api/v1/auth")){
-//            filterChain.doFilter(request, response);
-//            return;
+        // Skip filter for Swagger paths
+        if (isSwaggerPath(request.getServletPath())) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+//       if (request.getServletPath().contains("/swagger-ui")){
+//           filterChain.doFilter(request, response);
+//           return;
 //        }
         final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         final String jwt;
@@ -60,5 +75,9 @@ public class JwtFilter extends OncePerRequestFilter {
         }
         filterChain.doFilter(request,response);
 
+    }
+
+    private boolean isSwaggerPath(String servletPath) {
+        return EXCLUDED_PATHS.stream().anyMatch(servletPath::startsWith);
     }
 }

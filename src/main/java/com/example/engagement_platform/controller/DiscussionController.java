@@ -5,6 +5,7 @@ import com.example.engagement_platform.common.ResponseStatusEnum;
 import com.example.engagement_platform.model.Discussion;
 import com.example.engagement_platform.model.dto.response.DiscussionDto;
 import com.example.engagement_platform.service.DiscussionService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,7 +20,7 @@ import java.util.List;
 public class DiscussionController {
 
     private final DiscussionService discussionService;
-
+    @Operation(summary = "get all discussions")
     @GetMapping
     public ResponseEntity<GenericResponseV2<List<DiscussionDto>>> getAllDiscussions(){
         GenericResponseV2<List<DiscussionDto>> responseV2 = discussionService.getAllDiscussions();
@@ -29,7 +30,7 @@ public class DiscussionController {
             return ResponseEntity.badRequest().body(responseV2);
         }
     }
-
+    @Operation(summary = "create discussion")
     @PostMapping
     public ResponseEntity<GenericResponseV2<DiscussionDto>> createDiscussion(@Valid @RequestBody DiscussionDto discussionDto){
         GenericResponseV2<DiscussionDto> responseV2 = discussionService.createDiscussion(discussionDto);
@@ -39,7 +40,7 @@ public class DiscussionController {
             return ResponseEntity.badRequest().body(responseV2);
         }
     }
-
+    @Operation(summary = "get discussion by id")
     @GetMapping("/{discussionId}")
     public ResponseEntity<GenericResponseV2<DiscussionDto>> getDiscussionById(@PathVariable Long discussionId){
         GenericResponseV2<DiscussionDto> response = discussionService.getDiscussionById(discussionId);
@@ -49,7 +50,7 @@ public class DiscussionController {
             return ResponseEntity.badRequest().body(response);
         }
     }
-
+    @Operation(summary = "delete discussion by id")
     @DeleteMapping("/{discussionId}")
     public ResponseEntity<GenericResponseV2<Boolean>> deleteDiscussionById(@PathVariable Long discussionId){
         GenericResponseV2<Boolean> responseV2 = discussionService.deleteDiscussionById(discussionId);
@@ -59,7 +60,7 @@ public class DiscussionController {
             return ResponseEntity.badRequest().body(responseV2);
         }
     }
-
+    @Operation(summary = "update discussion by id")
     @PutMapping("/{discussionId}")
     public ResponseEntity<GenericResponseV2<Boolean>> updateDiscussionById(@Valid @RequestBody DiscussionDto discussionDto, @PathVariable Long discussionId){
         GenericResponseV2<Boolean> responseV2 = discussionService.updateDiscussionById(discussionDto,discussionId);

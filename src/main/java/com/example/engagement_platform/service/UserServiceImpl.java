@@ -6,10 +6,7 @@ import com.example.engagement_platform.common.GenericResponseV2;
 import com.example.engagement_platform.common.ResponseStatusEnum;
 import com.example.engagement_platform.enums.EmailTemplateName;
 import com.example.engagement_platform.mappers.UserMapper;
-import com.example.engagement_platform.model.PublicServant;
-import com.example.engagement_platform.model.Token;
-import com.example.engagement_platform.model.User;
-import com.example.engagement_platform.model.UserType;
+import com.example.engagement_platform.model.*;
 import com.example.engagement_platform.model.dto.AuthResponseDto;
 import com.example.engagement_platform.model.dto.UserDto;
 import com.example.engagement_platform.model.dto.request.AuthRequest;
@@ -123,9 +120,10 @@ public class UserServiceImpl implements UserService{
     public GenericResponse addUsers(UserDto newUser) {
         try {
             // Fetch the location details based on the locationId from the Users entity
-            locationRepository.findByLocationId(newUser.getLocationId())
-                        .orElseThrow(() -> new RuntimeException("Location not found"));
+            Location location = locationRepository.findByLocationId(newUser.getLocationId())
+                    .orElse(Location.builder().locationId(1L).county("Nairobi").subCounty("Nairobi").build());
 
+            newUser.setLocationId(location.getLocationId());
             User userToSave = userMapper.toEntity(newUser);
 
             // encrypt the password
@@ -212,7 +210,7 @@ public class UserServiceImpl implements UserService{
         try {
             User userToBeSaved = userMapper.toEntity(userDto);
             User savedUser = userRepository.save(userToBeSaved);
-             userMapper.toDto(savedUser);
+            userMapper.toDto(savedUser);
             return GenericResponseV2.<Boolean>builder()
                     .status(ResponseStatusEnum.SUCCESS)
                     .message("User details updated successfully")
@@ -226,7 +224,7 @@ public class UserServiceImpl implements UserService{
                     ._embedded(false)
                     .build();
         }
-        }
+    }
 
 
     private void sendValidationEmail(User userToSave) throws MessagingException {

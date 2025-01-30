@@ -5,6 +5,7 @@ import com.example.engagement_platform.common.ResponseStatusEnum;
 import com.example.engagement_platform.model.Notification;
 import com.example.engagement_platform.model.dto.response.NotificationDto;
 import com.example.engagement_platform.service.NotificationService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,7 @@ public class NotificationController {
 
     private final NotificationService notificationService;
 
+    @Operation(summary = "get all notifications")
     @GetMapping
     public ResponseEntity<GenericResponseV2<List<NotificationDto>>> getAllNotifications(){
         GenericResponseV2<List<NotificationDto>> response = notificationService.getAllNotifications();
@@ -30,7 +32,7 @@ public class NotificationController {
             return ResponseEntity.badRequest().body(response);
         }
     }
-
+    @Operation(summary = "create notification")
     @PostMapping
     public ResponseEntity<GenericResponseV2<NotificationDto>> createNotification(@Valid @RequestBody NotificationDto notificationDto){
         GenericResponseV2<NotificationDto> responseV2 = notificationService.createNotification(notificationDto);
@@ -41,7 +43,7 @@ public class NotificationController {
         }
 
     }
-
+    @Operation(summary = "get notifications by id")
     @GetMapping("/{notificationId}")
     public ResponseEntity<GenericResponseV2<NotificationDto>> getNotificationById(@PathVariable Long notificationId){
         GenericResponseV2<NotificationDto> responseV2 = notificationService.getNotificationById(notificationId);
@@ -52,7 +54,7 @@ public class NotificationController {
         }
 
     }
-
+    @Operation(summary = "delete notification by id")
     @DeleteMapping("/{notificationId}")
     public ResponseEntity<GenericResponseV2<Boolean>> deleteNotificationById(@PathVariable Long notificationId){
         GenericResponseV2<Boolean> responseV2 = notificationService.deleteNotificationById(notificationId);
@@ -63,6 +65,7 @@ public class NotificationController {
         }
     }
 
+    @Operation(summary = "update notification by id")
     @PutMapping("/{notificationId}")
     public ResponseEntity<GenericResponseV2<Boolean>> updateNotificationById(@Valid @RequestBody NotificationDto notificationDto, @PathVariable Long notificationId){
         GenericResponseV2<Boolean> responseV2 = notificationService.updateNotificationById(notificationDto, notificationId);
