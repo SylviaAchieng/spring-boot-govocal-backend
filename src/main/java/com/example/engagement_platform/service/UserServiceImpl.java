@@ -84,6 +84,7 @@ public class UserServiceImpl implements UserService{
             var jwtToken = jwtService.generateToken(claims, user);
             AuthResponseDto response = AuthResponseDto.builder()
                     .token(jwtToken)
+                    .user(user)
                     .build();
             return GenericResponseV2.<AuthResponseDto>builder()
                     .status(ResponseStatusEnum.SUCCESS)

@@ -1,9 +1,7 @@
 package com.example.engagement_platform.mappers;
 
 import com.example.engagement_platform.model.*;
-import com.example.engagement_platform.model.dto.response.CommentDto;
 import com.example.engagement_platform.model.dto.response.EventDto;
-import com.example.engagement_platform.repository.DiscussionRepository;
 import com.example.engagement_platform.repository.LocationRepository;
 import com.example.engagement_platform.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
