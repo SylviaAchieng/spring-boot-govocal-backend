@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProjectsDto {
+    private BigDecimal projectId;
     private Long userId;
     private String title;
     private String description;

@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Date;
+import java.time.LocalTime;
 
 @Data
 @Builder
@@ -28,6 +29,10 @@ public class EventDto {
     private Date createdAt;
 
     private Date eventDate;
+
+    private String base64EncodedImage;
+
+    private LocalTime time;
 
     private Long locationId;
 

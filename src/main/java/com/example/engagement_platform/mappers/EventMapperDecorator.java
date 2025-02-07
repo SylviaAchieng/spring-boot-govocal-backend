@@ -7,6 +7,8 @@ import com.example.engagement_platform.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
+import java.util.Base64;
+
 public class EventMapperDecorator implements EventMapper{
     @Autowired
     @Qualifier("delegate")
@@ -21,7 +23,7 @@ public class EventMapperDecorator implements EventMapper{
     @Override
     public EventDto toDto(Event event) {
         EventDto mappedDto = eventMapper.toDto(event);
-
+        mappedDto.setTime(event.getTime());
         // custom mapping for user
         User user = event.getUser();
         if (user != null){
@@ -31,6 +33,11 @@ public class EventMapperDecorator implements EventMapper{
         Location location = event.getLocation();
         if (location != null){
             mappedDto.setLocationId(location.getLocationId());
+
+        }
+        byte[] image = event.getImage();
+        if (image!=null && (image.length>0)){
+            mappedDto.setBase64EncodedImage(Base64.getEncoder().encodeToString(image));
         }
 
         return mappedDto;
@@ -39,7 +46,7 @@ public class EventMapperDecorator implements EventMapper{
     @Override
     public Event toEntity(EventDto eventDto) {
         Event mappedEntity = eventMapper.toEntity(eventDto);
-
+        mappedEntity.setTime(eventDto.getTime());
         Long userId = eventDto.getUserId();
         User user = userRepository.findByUserId(userId)
                 .orElse(User.builder()
@@ -53,6 +60,11 @@ public class EventMapperDecorator implements EventMapper{
                         .locationId(locationId)
                         .build());
         mappedEntity.setLocation(location);
+
+        String base64EncodedImage = eventDto.getBase64EncodedImage();
+        if (base64EncodedImage!=null && !base64EncodedImage.isEmpty()){
+            mappedEntity.setImage(Base64.getDecoder().decode(base64EncodedImage));
+        }
 
         return mappedEntity;
     }

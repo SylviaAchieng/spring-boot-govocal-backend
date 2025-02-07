@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Date;
+import java.time.LocalTime;
 
 @Data
 @AllArgsConstructor
@@ -35,7 +36,13 @@ public class Event {
     @Column(name = "event_date")
     private Date eventDate;
 
-    @ManyToOne
+    @Column(name = "image")
+    private byte[] image;
+
+    @Column(name = "time")
+    private LocalTime time;
+
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(referencedColumnName = "location_id", name = "location_id")
     private Location location;
 
