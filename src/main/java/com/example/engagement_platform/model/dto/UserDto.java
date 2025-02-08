@@ -1,11 +1,9 @@
 package com.example.engagement_platform.model.dto;
 
-import com.example.engagement_platform.model.PublicServant;
 import com.example.engagement_platform.model.UserType;
 import com.example.engagement_platform.model.dto.request.PublicServantDto;
+import com.example.engagement_platform.model.dto.response.LocationDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.Access;
-import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -14,8 +12,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.math.BigInteger;
 
 @Data
 @NoArgsConstructor
@@ -44,5 +40,5 @@ public class UserDto {
 
     private PublicServantDto publicServant;
 
-    private Long locationId;
+    private LocationDto location;
 }

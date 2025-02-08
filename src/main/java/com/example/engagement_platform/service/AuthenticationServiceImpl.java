@@ -39,7 +39,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public GenericResponseV2<?> register(UserDto request) {
         try {
             // Fetch the location details based on the locationId from the Users entity
-            locationRepository.findByLocationId(request.getLocationId())
+            locationRepository.findByLocationId(request.getLocation().getLocationId())
                     .orElseThrow(() -> new RuntimeException("Location not found"));
 
             User userToSave = userMapper.toEntity(request);

@@ -5,6 +5,7 @@ import com.example.engagement_platform.model.User;
 import com.example.engagement_platform.model.UserType;
 import com.example.engagement_platform.model.dto.UserDto;
 import com.example.engagement_platform.model.dto.request.PublicServantDto;
+import com.example.engagement_platform.model.dto.response.LocationDto;
 import com.example.engagement_platform.repository.LocationRepository;
 import com.example.engagement_platform.repository.PublicServantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,9 +31,13 @@ public class UserMapperDecorator implements UserMapper{
         // custom mapping for location
         Location location = user.getLocation();
         if (location != null){
-            mappedDto.setLocationId(location.getLocationId());
+            mappedDto.setLocation(LocationDto.builder()
+                            .locationId(location.getLocationId())
+                            .address(location.getAddress())
+                            .county(location.getCounty())
+                            .subCounty(location.getSubCounty())
+                    .build());
         }
-
         // custom mapping for public servant
         UserType userType = user.getUserType();
         if (userType.equals(UserType.PUBLIC_SERVANT)) {
@@ -53,13 +58,16 @@ public class UserMapperDecorator implements UserMapper{
     public User toEntity(UserDto userDto) {
         User mappedEntity = userMapper.toEntity(userDto);
 
-        Long locationId = userDto.getLocationId();
-        Location location = locationRepository.findByLocationId(locationId)
-                .orElse(Location.builder()
-                        .locationId(locationId)
-                        .build());
-        mappedEntity.setLocation(location);
 
+        LocationDto locationDto = userDto.getLocation();
+        if (locationDto!=null){
+            Long locationId = locationDto.getLocationId();
+            Location location = locationRepository.findByLocationId(locationId)
+                    .orElse(Location.builder()
+                            .locationId(locationId)
+                            .build());
+            mappedEntity.setLocation(location);
+        }
         return mappedEntity;
     }
 }

@@ -14,6 +14,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -97,6 +98,7 @@ public class UserController {
     }
     @Operation(summary = "update user by id")
     @PutMapping("/{userId}")
+    @PreAuthorize("hasRole('ADMIN') or #userId == authentication.principal.userId")
     public ResponseEntity<GenericResponseV2<Boolean>> updateUserById(@Valid @RequestBody UserDto userDto, @PathVariable Long userId){
         GenericResponseV2<Boolean> responseV2 = userService.updateUserById(userId, userDto);
         if (responseV2.getStatus().equals(ResponseStatusEnum.SUCCESS)){

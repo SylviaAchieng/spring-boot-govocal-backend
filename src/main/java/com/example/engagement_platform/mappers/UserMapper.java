@@ -15,9 +15,9 @@ public interface UserMapper {
 
     UserMapper INSTANCE= Mappers.getMapper(UserMapper.class);
 
-    @Mapping(source = "location", target = "locationId", ignore = true)
+    @Mapping(source = "location", target = "location", ignore = true)
     UserDto toDto(User users);
 
-    @Mapping(source = "locationId", target = "location", ignore = true)
+    @Mapping(source = "location", target = "location", ignore = true)
     User toEntity(UserDto userDto);
 }

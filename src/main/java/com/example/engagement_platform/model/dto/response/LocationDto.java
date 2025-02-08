@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class LocationDto {
     private Long locationId;
-    private String city;
+    private String subCounty;
     private String address;
     private String county;
 }

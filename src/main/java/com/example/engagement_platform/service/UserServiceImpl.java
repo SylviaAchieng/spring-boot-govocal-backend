@@ -11,6 +11,7 @@ import com.example.engagement_platform.model.dto.AuthResponseDto;
 import com.example.engagement_platform.model.dto.UserDto;
 import com.example.engagement_platform.model.dto.request.AuthRequest;
 import com.example.engagement_platform.model.dto.request.PublicServantDto;
+import com.example.engagement_platform.model.dto.response.LocationDto;
 import com.example.engagement_platform.repository.LocationRepository;
 import com.example.engagement_platform.repository.PublicServantRepository;
 import com.example.engagement_platform.repository.TokenRepository;
@@ -121,10 +122,12 @@ public class UserServiceImpl implements UserService{
     public GenericResponse addUsers(UserDto newUser) {
         try {
             // Fetch the location details based on the locationId from the Users entity
-            Location location = locationRepository.findByLocationId(newUser.getLocationId())
+            Location location = locationRepository.findByLocationId(newUser.getLocation().getLocationId())
                     .orElse(Location.builder().locationId(1L).county("Nairobi").subCounty("Nairobi").build());
 
-            newUser.setLocationId(location.getLocationId());
+            newUser.setLocation(LocationDto.builder()
+                            .locationId(location.getLocationId())
+                    .build());
             User userToSave = userMapper.toEntity(newUser);
 
             // encrypt the password
