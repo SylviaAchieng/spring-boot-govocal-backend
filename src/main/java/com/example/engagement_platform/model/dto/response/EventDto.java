@@ -2,6 +2,7 @@ package com.example.engagement_platform.model.dto.response;
 
 import com.example.engagement_platform.model.Location;
 import com.example.engagement_platform.model.User;
+import com.example.engagement_platform.model.dto.UserDto;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.JoinColumn;
@@ -34,7 +35,7 @@ public class EventDto {
 
     private LocalTime time;
 
-    private Long locationId;
+    private LocationDto location;
 
-    private Long userId;
+    private UserDto user;
 }

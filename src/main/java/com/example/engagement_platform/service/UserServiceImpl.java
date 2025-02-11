@@ -125,6 +125,8 @@ public class UserServiceImpl implements UserService{
             Location location = locationRepository.findByLocationId(newUser.getLocation().getLocationId())
                     .orElse(Location.builder().locationId(1L).county("Nairobi").subCounty("Nairobi").build());
 
+
+
             newUser.setLocation(LocationDto.builder()
                             .locationId(location.getLocationId())
                     .build());
@@ -213,6 +215,11 @@ public class UserServiceImpl implements UserService{
     public GenericResponseV2<Boolean> updateUserById(Long userId, UserDto userDto) {
         try {
             User userToBeSaved = userMapper.toEntity(userDto);
+
+            // encrypt the password
+            String encryptedPassword = passwordEncoder.encode(userToBeSaved.getPassword());
+            userToBeSaved.setPassword(encryptedPassword);
+
             User savedUser = userRepository.save(userToBeSaved);
             userMapper.toDto(savedUser);
             return GenericResponseV2.<Boolean>builder()

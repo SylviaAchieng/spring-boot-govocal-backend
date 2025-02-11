@@ -15,13 +15,13 @@ public interface EventMapper {
 
     EventMapper INSTANCE= Mappers.getMapper(EventMapper.class);
 
-    @Mapping(source = "user", target = "userId", ignore = true)
-    @Mapping(source = "location", target = "locationId", ignore = true)
+    @Mapping(source = "user", target = "user", ignore = true)
+    @Mapping(source = "location", target = "location", ignore = true)
     @Mapping(source = "image", target = "base64EncodedImage",ignore = true)
     EventDto toDto(Event event);
 
-    @Mapping(source = "userId", target = "user", ignore = true)
-    @Mapping(source = "locationId", target = "location", ignore = true)
+    @Mapping(source = "user", target = "user", ignore = true)
+    @Mapping(source = "location", target = "location", ignore = true)
     @Mapping(source = "base64EncodedImage", target = "image",ignore = true)
     Event toEntity(EventDto eventDto);
 }

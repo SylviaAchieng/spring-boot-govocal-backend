@@ -37,7 +37,13 @@ public class SecurityConfiguration {
                         )
                         .permitAll()
                         .requestMatchers(
+                                HttpMethod.GET,
                                 "/api/v1/location",
+                                "/api/v1/events",
+                                "/api/v1/projects"
+                        )
+                        .permitAll()
+                        .requestMatchers(
                                 "/v2/api-docs",
                                 "/v3/api-docs",
                                 "/v3/api-docs/**",

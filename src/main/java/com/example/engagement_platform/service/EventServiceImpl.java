@@ -4,8 +4,15 @@ import com.example.engagement_platform.common.GenericResponseV2;
 import com.example.engagement_platform.common.ResponseStatusEnum;
 import com.example.engagement_platform.mappers.EventMapper;
 import com.example.engagement_platform.model.Event;
+import com.example.engagement_platform.model.Location;
+import com.example.engagement_platform.model.User;
+import com.example.engagement_platform.model.UserType;
+import com.example.engagement_platform.model.dto.UserDto;
 import com.example.engagement_platform.model.dto.response.EventDto;
+import com.example.engagement_platform.model.dto.response.LocationDto;
 import com.example.engagement_platform.repository.EventRepository;
+import com.example.engagement_platform.repository.LocationRepository;
+import com.example.engagement_platform.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +25,8 @@ public class EventServiceImpl implements EventService{
 
     private final EventRepository eventRepository;
     private final EventMapper eventMapper;
+    private final LocationRepository locationRepository;
+    private final UserRepository userRepository;
 
     @Override
     public GenericResponseV2<List<EventDto>> getAllEvents() {
@@ -42,6 +51,19 @@ public class EventServiceImpl implements EventService{
     @Override
     public GenericResponseV2<EventDto> createEvent(EventDto eventDto) {
         try {
+            // Fetch the location details based on the locationId from the location entity
+            Location location = locationRepository.findByLocationId(eventDto.getLocation().getLocationId())
+                    .orElse(Location.builder().locationId(1L).county("Nairobi").subCounty("Nairobi").build());
+
+            eventDto.setLocation(LocationDto.builder()
+                    .locationId(location.getLocationId())
+                    .build());
+            User user = userRepository.findByUserId(eventDto.getUser().getUserId()).orElse(User.builder().userId(17L).userType(UserType.valueOf("ADMIN")).build());
+
+            eventDto.setUser(UserDto.builder()
+                            .userId(user.getUserId())
+                    .build());
+
             Event eventToBeSaved = eventMapper.toEntity(eventDto);
             Event savedEvent = eventRepository.save(eventToBeSaved);
             EventDto response = eventMapper.toDto(savedEvent);
