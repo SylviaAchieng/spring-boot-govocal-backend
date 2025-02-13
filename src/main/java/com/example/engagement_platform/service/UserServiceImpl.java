@@ -125,8 +125,6 @@ public class UserServiceImpl implements UserService{
             Location location = locationRepository.findByLocationId(newUser.getLocation().getLocationId())
                     .orElse(Location.builder().locationId(1L).county("Nairobi").subCounty("Nairobi").build());
 
-
-
             newUser.setLocation(LocationDto.builder()
                             .locationId(location.getLocationId())
                     .build());

@@ -6,8 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigInteger;
-import java.sql.Date;
+import java.time.LocalDate;
 
 @Data
 @Builder
@@ -26,7 +25,7 @@ public class Comment {
     private String comment;
 
     @Column(name = "created_at")
-    private Date createdAt;
+    private LocalDate createdAt;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(referencedColumnName = "user_id", name = "user_id")

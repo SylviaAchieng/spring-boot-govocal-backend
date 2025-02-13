@@ -38,4 +38,7 @@ public class Project {
 
     @Column(name = "tag")
     private String tag;
+
+//    private BigDecimal approximateCost;
+//    private BigDecimal actualCost;
 }

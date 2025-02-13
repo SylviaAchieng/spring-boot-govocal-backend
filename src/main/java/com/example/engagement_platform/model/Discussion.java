@@ -1,12 +1,14 @@
 package com.example.engagement_platform.model;
 
+import com.example.engagement_platform.enums.CategoriesEnum;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigInteger;
-import java.sql.Date;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -24,7 +26,7 @@ public class Discussion {
     private String title;
 
     @Column(name = "created_at")
-    private Date createdAt;
+    private LocalDate createdAt;
 
     @Column(name = "description")
     private String description;
@@ -32,5 +34,18 @@ public class Discussion {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(referencedColumnName = "user_id", name = "user_id")
     private User user;
+
+    @Column(name = "likes")
+    private int replyCount;
+
+    @Column(name = "views")
+    private int viewCount;
+
+    @Column(name = "category")
+    @Enumerated(value = EnumType.STRING)
+    private CategoriesEnum category;
+
+    @OneToMany(mappedBy = "discussion", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
 
 }

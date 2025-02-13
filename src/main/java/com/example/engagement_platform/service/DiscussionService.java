@@ -16,4 +16,5 @@ public interface DiscussionService {
     GenericResponseV2<Boolean> deleteDiscussionById(Long discussionId);
 
     GenericResponseV2<Boolean> updateDiscussionById(DiscussionDto discussionDto, Long discussionId);
+
 }

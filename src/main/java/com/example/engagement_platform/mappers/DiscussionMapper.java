@@ -13,8 +13,8 @@ public interface DiscussionMapper {
 
     DiscussionMapper INSTANCE = Mappers.getMapper(DiscussionMapper.class);
 
-    @Mapping(source = "user", target = "userId", ignore = true)
+    @Mapping(source = "user", target = "user", ignore = true)
     DiscussionDto toDto(Discussion discussion);
-    @Mapping(source = "userId", target = "user", ignore = true)
+    @Mapping(source = "user", target = "user", ignore = true)
     Discussion toEntity(DiscussionDto discussionDto);
 }

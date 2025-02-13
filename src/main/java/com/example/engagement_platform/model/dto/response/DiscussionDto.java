@@ -1,16 +1,14 @@
 package com.example.engagement_platform.model.dto.response;
 
-import com.example.engagement_platform.model.User;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import com.example.engagement_platform.enums.CategoriesEnum;
+import com.example.engagement_platform.model.dto.UserDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Date;
+
+import java.time.LocalDate;
 
 @Data
 @Builder
@@ -21,9 +19,15 @@ public class DiscussionDto {
 
     private String title;
 
-    private Date createdAt;
+    private LocalDate createdAt;
 
     private String description;
 
-    private Long userId;
+    private UserDto user;
+
+    private int replyCount;
+
+    private int viewCount;
+
+    private CategoriesEnum category;
 }

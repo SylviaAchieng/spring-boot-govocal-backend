@@ -4,20 +4,25 @@ import com.example.engagement_platform.common.GenericResponseV2;
 import com.example.engagement_platform.common.ResponseStatusEnum;
 import com.example.engagement_platform.mappers.DiscussionMapper;
 import com.example.engagement_platform.model.Discussion;
+import com.example.engagement_platform.model.User;
+import com.example.engagement_platform.model.dto.UserDto;
 import com.example.engagement_platform.model.dto.response.DiscussionDto;
 import com.example.engagement_platform.repository.DiscussionRepository;
+import com.example.engagement_platform.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class DiscussionServiceImpl implements DiscussionService{
 
     private final DiscussionRepository discussionRepository;
     private final DiscussionMapper discussionMapper;
+    private final UserRepository userRepository;
 
     @Override
     public GenericResponseV2<List<DiscussionDto>> getAllDiscussions() {
@@ -45,6 +50,12 @@ public class DiscussionServiceImpl implements DiscussionService{
     @Override
     public GenericResponseV2<DiscussionDto> createDiscussion(DiscussionDto discussionDto) {
         try {
+            User user = userRepository.findByFullName(discussionDto.getUser().getFullName()).orElseThrow(() -> new RuntimeException("User not found"));
+            discussionDto.setUser(UserDto.builder()
+                            .userId(user.getUserId())
+                            .fullName(user.getFullName())
+                            .userType(user.getUserType())
+                    .build());
             Discussion discussionToBeSaved = discussionMapper.toEntity(discussionDto);
             Discussion savedDiscussion = discussionRepository.save(discussionToBeSaved);
             DiscussionDto response = discussionMapper.toDto(savedDiscussion);
@@ -67,6 +78,8 @@ public class DiscussionServiceImpl implements DiscussionService{
     public GenericResponseV2<DiscussionDto> getDiscussionById(Long discussionId) {
         try {
             Discussion discussionFromDb = discussionRepository.findByDiscussionId(discussionId).orElseThrow(() -> new RuntimeException("Discussion not found"));
+            discussionFromDb.setViewCount(discussionFromDb.getViewCount() + 1);
+            discussionRepository.save(discussionFromDb);
             DiscussionDto response = discussionMapper.toDto(discussionFromDb);
             return GenericResponseV2.<DiscussionDto>builder()
                     .status(ResponseStatusEnum.SUCCESS)
