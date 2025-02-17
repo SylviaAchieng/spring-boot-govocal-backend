@@ -11,5 +11,5 @@ public interface RsvpService {
     GenericResponseV2<RsvpDto> add(RsvpRequest rsvpRequest);
 
 
-    GenericResponseV2<List<RsvpDto>> getAllRsvp();
+    GenericResponseV2<List<RsvpDto>> getAllRsvpByEventId(Long eventId);
 }

@@ -13,6 +13,7 @@ public class RsvpMapperDecorator implements RsvpMapper{
     @Override
     public RsvpDto RSVPToRsvpDto(RSVP rsvp) {
         RsvpDto rsvpDto = rsvpMapper.RSVPToRsvpDto(rsvp);
+        rsvpDto.setId(rsvp.getRsvpID());
         return rsvpDto;
     }
 

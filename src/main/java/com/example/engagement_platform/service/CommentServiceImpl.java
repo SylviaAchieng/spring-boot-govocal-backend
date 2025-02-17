@@ -4,6 +4,7 @@ import com.example.engagement_platform.common.GenericResponseV2;
 import com.example.engagement_platform.common.ResponseStatusEnum;
 import com.example.engagement_platform.mappers.CommentMapper;
 import com.example.engagement_platform.model.Comment;
+import com.example.engagement_platform.model.Discussion;
 import com.example.engagement_platform.model.dto.response.CommentDto;
 import com.example.engagement_platform.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
@@ -122,4 +123,28 @@ public class CommentServiceImpl implements CommentService{
                     .build();
         }
         }
+
+    @Override
+    public GenericResponseV2<List<CommentDto>> getCommentsByDiscussionId(Long discussionId) {
+        try {
+            Discussion discussion = Discussion.builder()
+                    .discussionId(discussionId)
+                    .build();
+            List<Comment> commentByDiscussionId = commentRepository.findAllByDiscussion(discussion);
+            List<CommentDto> response = commentByDiscussionId.stream()
+                    .map(commentMapper::toDto)
+                    .toList();
+            return GenericResponseV2.<List<CommentDto>>builder()
+                    .message("Comments retrieved successfully")
+                    .status(ResponseStatusEnum.SUCCESS)
+                    ._embedded(response)
+                    .build();
+        }catch (Exception e){
+         e.printStackTrace();
+         return GenericResponseV2.<List<CommentDto>>builder()
+                 .status(ResponseStatusEnum.ERROR)
+                 .message("Unable to retrieve comments")
+                 .build();
+        }
+    }
 }

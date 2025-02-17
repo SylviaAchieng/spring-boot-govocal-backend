@@ -3,10 +3,11 @@ package com.example.engagement_platform.model;
 import com.example.engagement_platform.enums.CategoriesEnum;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Builder
 @Table(name = "discussion")
 public class Discussion {
 
@@ -26,7 +28,7 @@ public class Discussion {
     private String title;
 
     @Column(name = "created_at")
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
 
     @Column(name = "description")
     private String description;
@@ -36,10 +38,10 @@ public class Discussion {
     private User user;
 
     @Column(name = "likes")
-    private int replyCount;
+    private Integer replyCount;
 
     @Column(name = "views")
-    private int viewCount;
+    private Integer viewCount;
 
     @Column(name = "category")
     @Enumerated(value = EnumType.STRING)

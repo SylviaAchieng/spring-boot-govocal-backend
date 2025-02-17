@@ -25,9 +25,9 @@ public class DiscussionDto {
 
     private UserDto user;
 
-    private int replyCount;
+    private Integer replyCount;
 
-    private int viewCount;
+    private Integer viewCount;
 
     private CategoriesEnum category;
 }

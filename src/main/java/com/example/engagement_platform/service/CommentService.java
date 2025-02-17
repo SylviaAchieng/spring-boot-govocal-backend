@@ -16,4 +16,7 @@ public interface CommentService {
     GenericResponseV2<Boolean> deleteCommentById(Long commentId);
 
     GenericResponseV2<Boolean> updateCommentById(Long commentId, CommentDto commentDto);
+
+    GenericResponseV2<List<CommentDto>> getCommentsByDiscussionId(Long discussionId);
+
 }

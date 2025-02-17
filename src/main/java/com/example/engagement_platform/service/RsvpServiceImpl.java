@@ -32,8 +32,9 @@ public class RsvpServiceImpl implements RsvpService {
     @Override
     public GenericResponseV2<RsvpDto> add(RsvpRequest rsvpRequest) {
         // step 1 check if event and user are present
-        User user = userRepository.findById(rsvpRequest.getUserId()).orElseThrow(() -> new NoSuchRecordFoundException("User not found")); //todo:
-        Event event = eventRepository.findById(rsvpRequest.getEventId()).orElseThrow(() -> new NoSuchRecordFoundException("Event not found"));
+//        User user = userRepository.findByFullName(rsvpRequest.getUser().getFullName()).orElseThrow(() -> new NoSuchRecordFoundException("User not found")); //todo:
+        User optuser = userRepository.findByFullNameAndEmail(rsvpRequest.getUser().getFullName(), rsvpRequest.getUser().getEmail()).orElseThrow(() -> new NoSuchRecordFoundException("User not found"));
+        Event event = eventRepository.findById(rsvpRequest.getEvent().getEventId()).orElseThrow(() -> new NoSuchRecordFoundException("Event not found"));
 
         // step 2: check if event is still on
         LocalDate eventDate = event.getEventDate().toLocalDate();
@@ -41,6 +42,15 @@ public class RsvpServiceImpl implements RsvpService {
             return GenericResponseV2.<RsvpDto>builder()
                     .status(ResponseStatusEnum.ERROR)
                     .message("Event already closed")
+                    .build();
+        }
+
+        // Step 3: Check if the user has already RSVPed for this event
+        boolean alreadyRsvped = rsvpRepository.existsByUserAndEvent(optuser, event);
+        if (alreadyRsvped) {
+            return GenericResponseV2.<RsvpDto>builder()
+                    .status(ResponseStatusEnum.ERROR)
+                    .message("You have already RSVPed for this event")
                     .build();
         }
 
@@ -52,7 +62,7 @@ public class RsvpServiceImpl implements RsvpService {
         RSVP rsvp = RSVP.builder()
                 .rsvpStatus("BOOKED") //TODO: figure out which status go here
                 .event(event)
-                .user(user)
+                .user(optuser)
                 .build();
         RSVP savedRsvp = rsvpRepository.save(rsvp);
         return GenericResponseV2.<RsvpDto>builder()
@@ -63,9 +73,12 @@ public class RsvpServiceImpl implements RsvpService {
     }
 
     @Override
-    public GenericResponseV2<List<RsvpDto>> getAllRsvp() {
+    public GenericResponseV2<List<RsvpDto>> getAllRsvpByEventId(Long eventId) {
         try {
-            List<RSVP> rsvps = rsvpRepository.findAll();
+            Event event = Event.builder()
+                    .eventId(eventId)
+                    .build();
+            List<RSVP> rsvps = rsvpRepository.findAllByEvent(event);
             List<RsvpDto> response = rsvps.stream().map(rsvpMapper::RSVPToRsvpDto).collect(Collectors.toList());
             return GenericResponseV2.<List<RsvpDto>>builder()
                     .status(ResponseStatusEnum.SUCCESS)

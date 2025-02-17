@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class DiscussionMapperDecorator implements DiscussionMapper{
     @Autowired
@@ -20,9 +21,10 @@ public class DiscussionMapperDecorator implements DiscussionMapper{
     @Override
     public DiscussionDto toDto(Discussion discussion) {
         DiscussionDto mappedDto = discussionMapper.toDto(discussion);
-        mappedDto.setReplyCount(discussion.getComments().size());
+        //mappedDto.setReplyCount(discussion.getComments().size());
+        mappedDto.setReplyCount(discussion.getComments() != null ? discussion.getComments().size() : 0);
         mappedDto.setViewCount(discussion.getViewCount());
-        mappedDto.setCreatedAt(LocalDate.now());
+        mappedDto.setCreatedAt(LocalDate.from(discussion.getCreatedAt()));
         // custom mapping for user
         User user = discussion.getUser();
         if (user != null){
@@ -41,7 +43,10 @@ public class DiscussionMapperDecorator implements DiscussionMapper{
         Discussion mappedEntity = discussionMapper.toEntity(discussionDto);
         mappedEntity.setReplyCount(0);
         mappedEntity.setViewCount(0);
-        mappedEntity.setCreatedAt(LocalDate.now());
+        // Set createdAt only if it's a new discussion
+        if (mappedEntity.getCreatedAt() == null) {
+            mappedEntity.setCreatedAt(LocalDateTime.now());
+        }
         UserDto userDto = discussionDto.getUser();
         if (userDto!=null){
             Long userId = userDto.getUserId();

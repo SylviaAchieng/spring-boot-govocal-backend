@@ -71,4 +71,15 @@ public class CommentController {
             return ResponseEntity.ok().body(response);
         }
     }
+
+    @Operation(summary = "get comment by discussionId")
+    @GetMapping("/discussion/{discussionId}")
+    public  ResponseEntity<GenericResponseV2<List<CommentDto>>> getCommentsByDiscussionId(@PathVariable Long discussionId){
+        GenericResponseV2<List<CommentDto>> response = commentService.getCommentsByDiscussionId(discussionId);
+        if (response.getStatus().equals(ResponseStatusEnum.SUCCESS)){
+            return ResponseEntity.ok().body(response);
+        }else {
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
 }

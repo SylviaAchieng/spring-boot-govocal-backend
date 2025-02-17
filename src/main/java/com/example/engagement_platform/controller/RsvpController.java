@@ -26,9 +26,9 @@ public class RsvpController {
         return ResponseEntity.ok(response);
     }
     @Operation(summary = "get all rsvp")
-    @GetMapping
-    public ResponseEntity<GenericResponseV2<List<RsvpDto>>> getAllRsvp(){
-        GenericResponseV2<List<RsvpDto>> response = rsvpService.getAllRsvp();
+    @GetMapping("/{eventId}")
+    public ResponseEntity<GenericResponseV2<List<RsvpDto>>> getAllRsvpByEventId(@PathVariable Long eventId){
+        GenericResponseV2<List<RsvpDto>> response = rsvpService.getAllRsvpByEventId(eventId);
         return ResponseEntity.ok().body(response);
     }
 }

@@ -2,7 +2,9 @@ package com.example.engagement_platform.controller;
 
 import com.example.engagement_platform.common.GenericResponseV2;
 import com.example.engagement_platform.common.ResponseStatusEnum;
+import com.example.engagement_platform.enums.CategoriesEnum;
 import com.example.engagement_platform.model.Discussion;
+import com.example.engagement_platform.model.User;
 import com.example.engagement_platform.model.dto.response.DiscussionDto;
 import com.example.engagement_platform.service.DiscussionService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -42,8 +44,11 @@ public class DiscussionController {
     }
     @Operation(summary = "get discussion by id")
     @GetMapping("/{discussionId}")
-    public ResponseEntity<GenericResponseV2<DiscussionDto>> getDiscussionById(@PathVariable Long discussionId){
-        GenericResponseV2<DiscussionDto> response = discussionService.getDiscussionById(discussionId);
+    public ResponseEntity<GenericResponseV2<DiscussionDto>> getDiscussionById(
+            @PathVariable Long discussionId,
+            @RequestParam(name = "userId") Long userId
+    ){
+        GenericResponseV2<DiscussionDto> response = discussionService.getDiscussionById(discussionId,userId);
         if (response.getStatus().equals(ResponseStatusEnum.SUCCESS)){
             return ResponseEntity.ok().body(response);
         }else {
@@ -71,4 +76,18 @@ public class DiscussionController {
         }
 
     }
+
+    @Operation(summary = "endpoint to get discussions by category")
+    @GetMapping("/category")
+    public ResponseEntity<GenericResponseV2<List<DiscussionDto>>> getDiscussionsByCategory(
+            @RequestParam(name = "category")CategoriesEnum category
+            ){
+        GenericResponseV2<List<DiscussionDto>> response = discussionService.getDiscussionsByCategory(category);
+        if (response.getStatus().equals(ResponseStatusEnum.SUCCESS)){
+            return ResponseEntity.ok().body(response);
+        }else {
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+
 }

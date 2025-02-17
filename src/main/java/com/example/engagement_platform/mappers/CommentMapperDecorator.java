@@ -47,7 +47,7 @@ public class CommentMapperDecorator implements CommentMapper{
                     .title(discussion.getTitle())
                     .description(discussion.getDescription())
                     .category(discussion.getCategory())
-                    .createdAt(discussion.getCreatedAt())
+                    .createdAt(LocalDate.from(discussion.getCreatedAt()))
                     .replyCount(discussion.getReplyCount())
                     .viewCount(discussion.getViewCount())
                     .build());
