@@ -41,14 +41,14 @@ public class IssuesController {
             }
 
     }
-    @Operation(summary = "get issue by id")
-    @GetMapping("/{issueId}")
-    public ResponseEntity<GenericResponseV2<IssueDto>> getIssueById(@PathVariable Long issueId){
-            GenericResponseV2<IssueDto> issueById = issuesService.getIssueById(issueId);
-            if (issueById.getStatus().equals(ResponseStatusEnum.SUCCESS)){
-                return ResponseEntity.ok().body(issueById);
+    @Operation(summary = "get issue by location id")
+    @GetMapping("/{locationId}")
+    public ResponseEntity<GenericResponseV2<IssueDto>> getIssueByLocationId(@PathVariable Long locationId){
+            GenericResponseV2<IssueDto> response = issuesService.getIssueByLocationId(locationId);
+            if (response.getStatus().equals(ResponseStatusEnum.SUCCESS)){
+                return ResponseEntity.ok().body(response);
             }else {
-                return ResponseEntity.badRequest().body(issueById);
+                return ResponseEntity.badRequest().body(response);
             }
     }
     @Operation(summary = "delete issue by id")

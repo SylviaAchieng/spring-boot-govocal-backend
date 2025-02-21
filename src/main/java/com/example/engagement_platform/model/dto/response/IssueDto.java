@@ -1,6 +1,7 @@
 package com.example.engagement_platform.model.dto.response;
 
 
+import com.example.engagement_platform.model.dto.UserDto;
 import com.example.engagement_platform.model.dto.request.ImageDto;
 
 import lombok.AllArgsConstructor;
@@ -25,9 +26,11 @@ public class IssueDto {
 
     private Date createdAt;
 
-    private ImageDto image;
+    //private ImageDto image;
 
-    private Long locationId;
+    private String base64EncodedImage;
 
-    private Long userId;
+    private LocationDto location;
+
+    private UserDto user;
 }

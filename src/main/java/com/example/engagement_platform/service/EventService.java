@@ -16,4 +16,6 @@ public interface EventService {
     GenericResponseV2<Boolean> deleteEventById(Long eventId);
 
     GenericResponseV2<Boolean> updateEventById(EventDto eventDto, Long eventId);
+
+    GenericResponseV2<List<EventDto>> getEventByLocationId(Long locationId);
 }

@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -22,9 +22,9 @@ public class ProjectComments {
     private BigDecimal id;
 
     @Column(name = "created_at")
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
 
-    @Column(name = "comment")
+    @Column(name = "comments")
     private String comment;
 
     @ManyToOne(cascade = CascadeType.ALL)

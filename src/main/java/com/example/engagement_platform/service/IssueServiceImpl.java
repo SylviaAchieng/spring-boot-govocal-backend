@@ -6,6 +6,7 @@ import com.example.engagement_platform.mappers.ImageMapper;
 import com.example.engagement_platform.mappers.IssueMapper;
 import com.example.engagement_platform.model.Image;
 import com.example.engagement_platform.model.Issue;
+import com.example.engagement_platform.model.Location;
 import com.example.engagement_platform.model.dto.response.IssueDto;
 import com.example.engagement_platform.repository.ImageRepository;
 import com.example.engagement_platform.repository.IssueRepository;
@@ -13,6 +14,8 @@ import com.example.engagement_platform.repository.LocationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,11 +50,35 @@ public class IssueServiceImpl implements IssuesService{
         }
     }
 
-
     @Override
     public GenericResponseV2<IssueDto> getIssueById(Long issueId) {
         try {
-            Issue issueFromDb = issueRepository.findByIssueId(issueId).orElseThrow(() -> new RuntimeException("Issue not found"));
+            Issue issue = issueRepository.findByIssueId(issueId).orElseThrow(() -> new RuntimeException("Issue not found"));
+            IssueDto response = issueMapper.toDto(issue);
+            return GenericResponseV2.<IssueDto>builder()
+                    .status(ResponseStatusEnum.SUCCESS)
+                    .message("Issue retrieved successfully")
+                    ._embedded(response)
+                    .build();
+
+        }catch (Exception e){
+            e.printStackTrace();
+            return GenericResponseV2.<IssueDto>builder()
+                    .status(ResponseStatusEnum.ERROR)
+                    .message("Unable to retrieve issue")
+                    ._embedded(null)
+                    .build();
+        }
+    }
+
+
+    @Override
+    public GenericResponseV2<IssueDto> getIssueByLocationId(Long locationId) {
+        try {
+            Location location = Location.builder()
+                    .locationId(locationId)
+                    .build();
+            Issue issueFromDb = issueRepository.findByLocation(location).orElseThrow(() -> new RuntimeException("Issue not found"));
             IssueDto response = issueMapper.toDto(issueFromDb);
             return GenericResponseV2.<IssueDto>builder()
                     .status(ResponseStatusEnum.SUCCESS)
@@ -94,8 +121,8 @@ public class IssueServiceImpl implements IssuesService{
     public GenericResponseV2<Boolean> updateIssueById(IssueDto issueDto, Long issueId) {
         try {
             Issue issueToSave = issueMapper.toEntity(issueDto);
-            Image savedImage = imageRepository.save(issueToSave.getIssueImage());
-            issueToSave.setIssueImage(savedImage);
+            //Image savedImage = imageRepository.save(issueToSave.getIssueImage());
+            //issueToSave.setIssueImage(savedImage);
             Issue savedIssue = issueRepository.save(issueToSave);
             issueMapper.toDto(savedIssue);
             return GenericResponseV2.<Boolean>builder()
@@ -119,8 +146,9 @@ public class IssueServiceImpl implements IssuesService{
     public GenericResponseV2<IssueDto> createIssue(IssueDto issueDto) {
         try {
             Issue issueToBeSaved = issueMapper.toEntity(issueDto);
-            Image savedImage = imageRepository.save(issueToBeSaved.getIssueImage());
-            issueToBeSaved.setIssueImage(savedImage);
+            //Image savedImage = imageRepository.save(issueToBeSaved.getIssueImage());
+            //issueToBeSaved.setIssueImage(savedImage);
+            issueToBeSaved.setCreatedAt(Date.valueOf(LocalDate.now()));
             Issue savedIssue = issueRepository.save(issueToBeSaved);
             IssueDto response = issueMapper.toDto(savedIssue);
             return GenericResponseV2.<IssueDto>builder()

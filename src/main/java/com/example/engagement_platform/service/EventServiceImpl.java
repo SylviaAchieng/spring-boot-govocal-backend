@@ -143,4 +143,27 @@ public class EventServiceImpl implements EventService{
         }
     }
 
+    @Override
+    public GenericResponseV2<List<EventDto>> getEventByLocationId(Long locationId) {
+        try {
+            Location location = Location.builder()
+                    .locationId(locationId)
+                    .build();
+            List<Event> event = eventRepository.findAllByLocation(location);
+            List<EventDto> response = event.stream().map(eventMapper::toDto).toList();
+            return GenericResponseV2.<List<EventDto>>builder()
+                    .status(ResponseStatusEnum.SUCCESS)
+                    .message("Events retrieved successfully")
+                    ._embedded(response)
+                    .build();
+        }catch (Exception e){
+            e.printStackTrace();
+            return GenericResponseV2.<List<EventDto>>builder()
+                    .status(ResponseStatusEnum.ERROR)
+                    .message("Unable to retrieved events")
+                    ._embedded(null)
+                    .build();
+        }
+    }
+
 }

@@ -9,11 +9,13 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 @DecoratedWith(ProjectMapperDecorator.class)
 public interface ProjectMapper {
-    @Mapping(source = "user", target = "userId", ignore = true)
+    @Mapping(source = "user", target = "user", ignore = true)
+    @Mapping(source = "location", target = "location", ignore = true)
     @Mapping(source = "image", target = "base64EncodedImage",ignore = true)
     ProjectsDto toDto(Project project);
 
-    @Mapping(source = "userId", target = "user", ignore = true)
+    @Mapping(source = "user", target = "user", ignore = true)
+    @Mapping(source = "location", target = "location", ignore = true)
     @Mapping(source = "base64EncodedImage", target = "image",ignore = true)
     Project toEntity(ProjectsDto projectsDto);
 }

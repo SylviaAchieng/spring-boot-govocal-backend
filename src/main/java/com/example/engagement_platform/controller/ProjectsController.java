@@ -77,6 +77,15 @@ public class ProjectsController {
         }
     }
 
+    @GetMapping("/location/{locationId}")
+    public ResponseEntity<GenericResponseV2<List<ProjectsDto>>> getProjectByLocationId(@PathVariable Long locationId){
+        GenericResponseV2<List<ProjectsDto>> response = projectService.getProjectByLocationId(locationId);
+        if (response.getStatus().equals(ResponseStatusEnum.SUCCESS)){
+            return ResponseEntity.ok().body(response);
+        }else {
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
 
 
 }

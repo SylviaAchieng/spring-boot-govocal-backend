@@ -17,4 +17,5 @@ public class ProjectCommentDto {
     private Long userId;
     private BigDecimal projectId;
     private LocalDateTime createdAt;
+    private String comment;
 }

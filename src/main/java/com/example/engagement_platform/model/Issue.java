@@ -27,15 +27,17 @@ public class Issue {
     @NotNull(message = " description is mandatory")
     private String description;
 
-    @NotNull(message = "status  is mandatory")
     private String status;
 
     @NotNull(message = "creation date is mandatory")
     private Date createdAt;
 
-    @ManyToOne
-    @JoinColumn(name = "image_id")
-    private Image issueImage;
+//    @ManyToOne
+//    @JoinColumn(name = "image_id")
+//    private Image issueImage;
+
+    @Column(name = "image")
+    private byte[] image;
 
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(referencedColumnName = "location_id", name = "location_id")

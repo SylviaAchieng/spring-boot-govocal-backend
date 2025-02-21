@@ -73,4 +73,14 @@ public class EventController {
         }
     }
 
+    @GetMapping("/location/{locationId}")
+    public ResponseEntity<GenericResponseV2<List<EventDto>>> getEventByLocationId(@PathVariable Long locationId){
+        GenericResponseV2<List<EventDto>> response = eventService.getEventByLocationId(locationId);
+        if (response.getStatus().equals(ResponseStatusEnum.SUCCESS)){
+            return ResponseEntity.ok().body(response);
+        }else {
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+
 }

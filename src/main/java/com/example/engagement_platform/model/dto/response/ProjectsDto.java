@@ -1,5 +1,6 @@
 package com.example.engagement_platform.model.dto.response;
 
+import com.example.engagement_platform.model.dto.UserDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,10 +14,13 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class ProjectsDto {
     private BigDecimal projectId;
-    private Long userId;
+    private UserDto user;
     private String title;
     private String description;
     private String base64EncodedImage;
     private BigDecimal daysRemaining;
     private String tag;
+    private LocationDto location;
+    private BigDecimal approximateCost;
+    private BigDecimal actualCost;
 }

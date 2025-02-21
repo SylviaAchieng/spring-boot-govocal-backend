@@ -15,11 +15,13 @@ public interface IssueMapper {
 
     IssueMapper INSTANCE= Mappers.getMapper(IssueMapper.class);
 
-    @Mapping(source = "user", target = "userId", ignore = true)
-    @Mapping(source = "issueImage", target = "image", ignore = true)
+    @Mapping(source = "user", target = "user", ignore = true)
+    //@Mapping(source = "issueImage", target = "image", ignore = true)
+    @Mapping(source = "location", target = "location", ignore = true)
     IssueDto toDto(Issue issue);
 
-    @Mapping(source = "userId", target = "user", ignore = true)
-    @Mapping(source = "image", target = "issueImage", ignore = true)
+    @Mapping(source = "user", target = "user", ignore = true)
+    //@Mapping(source = "image", target = "issueImage", ignore = true)
+    @Mapping(source = "location", target = "location", ignore = true)
     Issue toEntity(IssueDto issueDto);
 }

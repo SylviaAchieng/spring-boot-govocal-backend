@@ -40,6 +40,12 @@ public class Project {
     @Column(name = "tag")
     private String tag;
 
-//    private BigDecimal approximateCost;
-//    private BigDecimal actualCost;
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(referencedColumnName = "location_id", name = "location_id")
+    private Location location;
+
+    @Column(name = "approximate_cost")
+    private BigDecimal approximateCost;
+    @Column(name = "actual_cost")
+    private BigDecimal actualCost;
 }
