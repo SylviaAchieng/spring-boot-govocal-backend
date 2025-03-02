@@ -42,9 +42,9 @@ public class IssuesController {
 
     }
     @Operation(summary = "get issue by location id")
-    @GetMapping("/{locationId}")
-    public ResponseEntity<GenericResponseV2<IssueDto>> getIssueByLocationId(@PathVariable Long locationId){
-            GenericResponseV2<IssueDto> response = issuesService.getIssueByLocationId(locationId);
+    @GetMapping("/location/{locationId}")
+    public ResponseEntity<GenericResponseV2<List<IssueDto>>> getIssueByLocationId(@PathVariable Long locationId){
+            GenericResponseV2<List<IssueDto>> response = issuesService.getIssueByLocationId(locationId);
             if (response.getStatus().equals(ResponseStatusEnum.SUCCESS)){
                 return ResponseEntity.ok().body(response);
             }else {

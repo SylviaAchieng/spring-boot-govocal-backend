@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Data
 @Builder
@@ -48,4 +49,9 @@ public class Project {
     private BigDecimal approximateCost;
     @Column(name = "actual_cost")
     private BigDecimal actualCost;
+
+    @Column(name = "start_date")
+    private LocalDate startDate;
+    @Column(name = "end_date")
+    private LocalDate endDate;
 }

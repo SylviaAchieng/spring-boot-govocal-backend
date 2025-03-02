@@ -17,5 +17,5 @@ public interface IssuesService {
 
     GenericResponseV2<IssueDto> createIssue(IssueDto issueDto);
 
-    GenericResponseV2<IssueDto> getIssueByLocationId(Long locationId);
+    GenericResponseV2<List<IssueDto>> getIssueByLocationId(Long locationId);
 }

@@ -6,13 +6,11 @@ import org.springframework.scheduling.annotation.Async;
 
 public interface EmailService {
 
-    @Async
-    void sendEmail(
-            String to,
-            String username,
-            EmailTemplateName emailTemplate,
-            String confirmationUrl,
-            String activationCode,
-            String subject
-    ) throws MessagingException;
+
+    void sendSimpleMessage(String to, String subject, String text);
+
+    void sendMessageWithAttachment(
+            String to, String subject, String text, String pathToAttachment) throws MessagingException;
+
+    void sendSimpleMessage(String email, String fullName, EmailTemplateName emailTemplateName, String activationUrl, String newToken, String accountActivation);
 }

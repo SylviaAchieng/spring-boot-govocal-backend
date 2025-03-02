@@ -51,6 +51,8 @@ public class ProjectMapperDecorator implements ProjectMapper{
         if (image!=null && (image.length>0)){
             mappedDto.setBase64EncodedImage(Base64.getEncoder().encodeToString(image));
         }
+        mappedDto.setStartDate(project.getStartDate());
+        mappedDto.setEndDate(project.getEndDate());
         return mappedDto;
     }
 
@@ -82,6 +84,7 @@ public class ProjectMapperDecorator implements ProjectMapper{
         if (base64EncodedImage!=null && !base64EncodedImage.isEmpty()){
             mappedEntity.setImage(Base64.getDecoder().decode(base64EncodedImage));
         }
+
         return mappedEntity;
     }
 }

@@ -17,6 +17,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Service
@@ -27,23 +29,58 @@ public class ProjectServiceImpl implements ProjectService{
     private final UserRepository userRepository;
     private final LocationRepository locationRepository;
 
+//    @Override
+//    public GenericResponseV2<List<ProjectsDto>> getAllProjects() {
+//        try {
+//            List<Project> projects = projectRepository.findAll();
+//            List<ProjectsDto> response = projects.stream().map(projectMapper::toDto).toList();
+//            getRemainingDays(response)
+//            return GenericResponseV2.<List<ProjectsDto>>builder()
+//                    .status(ResponseStatusEnum.SUCCESS)
+//                    .message("Projects retrieve successfully")
+//                    ._embedded(response)
+//                    .build();
+//        }catch (Exception e){
+//            e.printStackTrace();
+//            return GenericResponseV2.<List<ProjectsDto>>builder()
+//                    .status(ResponseStatusEnum.ERROR)
+//                    .message("Unable to retrieve projects")
+//                    ._embedded(null)
+//                    .build();
+//        }
+//    }
+
+
     @Override
     public GenericResponseV2<List<ProjectsDto>> getAllProjects() {
         try {
             List<Project> projects = projectRepository.findAll();
-            List<ProjectsDto> response = projects.stream().map(projectMapper::toDto).toList();
+            List<ProjectsDto> response = projects.stream()
+                    .map(projectMapper::toDto)
+                    .peek(this::setRemainingDays) // Set remaining days
+                    .toList();
+
             return GenericResponseV2.<List<ProjectsDto>>builder()
                     .status(ResponseStatusEnum.SUCCESS)
-                    .message("Projects retrieve successfully")
+                    .message("Projects retrieved successfully")
                     ._embedded(response)
                     .build();
-        }catch (Exception e){
-            e.printStackTrace();
+        } catch (Exception e) {
             return GenericResponseV2.<List<ProjectsDto>>builder()
                     .status(ResponseStatusEnum.ERROR)
-                    .message("Unable to retrieve projects")
-                    ._embedded(null)
+                    .message("Failed to retrieve projects: " + e.getMessage())
                     .build();
+        }
+    }
+
+    private void setRemainingDays(ProjectsDto projectDto) {
+        if (projectDto.getEndDate() != null) {
+            LocalDate today = LocalDate.now();
+            LocalDate endDate = projectDto.getEndDate();
+            long remainingDays = ChronoUnit.DAYS.between(today, endDate);
+            projectDto.setDaysRemaining(BigDecimal.valueOf(remainingDays > 0 ? remainingDays : 0)); // Ensure no negative days
+        } else {
+            projectDto.setDaysRemaining(BigDecimal.valueOf(0)); // Default to 0 if endDate is null
         }
     }
 
@@ -59,7 +96,6 @@ public class ProjectServiceImpl implements ProjectService{
             projectsDto.setLocation(LocationDto.builder()
                             .locationId(location.getLocationId())
                     .build());
-
             Project projectToBeSaved = projectMapper.toEntity(projectsDto);
             Project savedProject = projectRepository.save(projectToBeSaved);
             ProjectsDto response = projectMapper.toDto(savedProject);
@@ -77,6 +113,11 @@ public class ProjectServiceImpl implements ProjectService{
                     ._embedded(null)
                     .build();
         }
+    }
+
+    public long getRemainingDays(LocalDate endDate) {
+        LocalDate today = LocalDate.now(); // Get today's date
+        return ChronoUnit.DAYS.between(today, endDate); // Calculate remaining days
     }
 
     @Override

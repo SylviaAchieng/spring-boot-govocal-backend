@@ -85,7 +85,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private void sendValidationEmail(User userToSave) throws MessagingException {
         var newToken = generateAndSaveActivationToken(userToSave);
         //send email
-        emailService.sendEmail(
+        emailService.sendSimpleMessage(
                 userToSave.getEmail(),
                 userToSave.getFullName(),
                 EmailTemplateName.ACTIVATE_ACCOUNT,

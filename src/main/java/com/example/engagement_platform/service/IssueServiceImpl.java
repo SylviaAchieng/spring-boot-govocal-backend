@@ -7,6 +7,7 @@ import com.example.engagement_platform.mappers.IssueMapper;
 import com.example.engagement_platform.model.Image;
 import com.example.engagement_platform.model.Issue;
 import com.example.engagement_platform.model.Location;
+import com.example.engagement_platform.model.Project;
 import com.example.engagement_platform.model.dto.response.IssueDto;
 import com.example.engagement_platform.repository.ImageRepository;
 import com.example.engagement_platform.repository.IssueRepository;
@@ -73,21 +74,21 @@ public class IssueServiceImpl implements IssuesService{
 
 
     @Override
-    public GenericResponseV2<IssueDto> getIssueByLocationId(Long locationId) {
+    public GenericResponseV2<List<IssueDto>> getIssueByLocationId(Long locationId) {
         try {
             Location location = Location.builder()
                     .locationId(locationId)
                     .build();
-            Issue issueFromDb = issueRepository.findByLocation(location).orElseThrow(() -> new RuntimeException("Issue not found"));
-            IssueDto response = issueMapper.toDto(issueFromDb);
-            return GenericResponseV2.<IssueDto>builder()
+            List<Issue> issues = issueRepository.findAllByLocation(location);
+            List<IssueDto> response = issues.stream().map(issueMapper::toDto).toList();
+            return GenericResponseV2.<List<IssueDto>>builder()
                     .status(ResponseStatusEnum.SUCCESS)
                     .message("Issue retrieved successfully")
                     ._embedded(response)
                     .build();
         }catch (Exception e){
             e.printStackTrace();
-            return GenericResponseV2.<IssueDto>builder()
+            return GenericResponseV2.<List<IssueDto>>builder()
                     .status(ResponseStatusEnum.ERROR)
                     .message("Unable to retrieve issue")
                     ._embedded(null)
@@ -121,8 +122,7 @@ public class IssueServiceImpl implements IssuesService{
     public GenericResponseV2<Boolean> updateIssueById(IssueDto issueDto, Long issueId) {
         try {
             Issue issueToSave = issueMapper.toEntity(issueDto);
-            //Image savedImage = imageRepository.save(issueToSave.getIssueImage());
-            //issueToSave.setIssueImage(savedImage);
+            issueToSave.setCreatedAt(Date.valueOf(LocalDate.now()));
             Issue savedIssue = issueRepository.save(issueToSave);
             issueMapper.toDto(savedIssue);
             return GenericResponseV2.<Boolean>builder()

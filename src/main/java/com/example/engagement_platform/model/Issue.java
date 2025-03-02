@@ -13,7 +13,7 @@ import java.sql.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "issue")
+@Table(name = "issues")
 public class Issue {
 
     @Id
@@ -31,10 +31,6 @@ public class Issue {
 
     @NotNull(message = "creation date is mandatory")
     private Date createdAt;
-
-//    @ManyToOne
-//    @JoinColumn(name = "image_id")
-//    private Image issueImage;
 
     @Column(name = "image")
     private byte[] image;

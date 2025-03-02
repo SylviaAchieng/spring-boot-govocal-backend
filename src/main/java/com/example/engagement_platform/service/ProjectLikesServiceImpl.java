@@ -6,6 +6,7 @@ import com.example.engagement_platform.model.Project;
 import com.example.engagement_platform.model.ProjectLikes;
 import com.example.engagement_platform.model.User;
 import com.example.engagement_platform.model.dto.response.ProjectLikesDto;
+import com.example.engagement_platform.model.dto.response.RsvpDto;
 import com.example.engagement_platform.repository.ProjectLikesRepository;
 import com.example.engagement_platform.repository.ProjectRepository;
 import com.example.engagement_platform.repository.UserRepository;
@@ -28,6 +29,13 @@ public class ProjectLikesServiceImpl implements ProjectLikesService {
         try {
             User user = userRepository.findByUserId(projectLikes.getUser().getUserId()).orElseThrow(() -> new RuntimeException("User not found"));
             Project project = projectRepository.findByProjectId(projectLikes.getProject().getProjectId()).orElseThrow(() -> new RuntimeException("Project not found"));
+
+            // Step 3: Check if the user has already RSVPed for this event
+            boolean alreadyLiked = projectLikesRepository.existsByUserAndProject(user, project);
+            if (alreadyLiked) {
+                 throw new RuntimeException("user already liked the project");
+            }
+
             // Use the managed entities instead of creating new ones
             projectLikes.setUser(user);
             projectLikes.setProject(project);
