@@ -95,6 +95,7 @@ public class ProjectServiceImpl implements ProjectService{
             Location location = locationRepository.findByLocationId(projectsDto.getLocation().getLocationId()).orElseThrow(() -> new RuntimeException("Location not found"));
             projectsDto.setLocation(LocationDto.builder()
                             .locationId(location.getLocationId())
+                            .county(location.getCounty())
                     .build());
             Project projectToBeSaved = projectMapper.toEntity(projectsDto);
             Project savedProject = projectRepository.save(projectToBeSaved);
