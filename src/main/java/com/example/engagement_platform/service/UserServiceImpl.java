@@ -12,6 +12,7 @@ import com.example.engagement_platform.model.dto.UserDto;
 import com.example.engagement_platform.model.dto.request.AuthRequest;
 import com.example.engagement_platform.model.dto.request.PublicServantDto;
 import com.example.engagement_platform.model.dto.response.LocationDto;
+import com.example.engagement_platform.model.dto.response.ProjectsDto;
 import com.example.engagement_platform.repository.LocationRepository;
 import com.example.engagement_platform.repository.PublicServantRepository;
 import com.example.engagement_platform.repository.TokenRepository;
@@ -115,6 +116,29 @@ public class UserServiceImpl implements UserService{
         userRepository.save(user);
         savedToken.setValidatedAt(LocalDateTime.now());
         tokenRepository.save(savedToken);
+    }
+
+    @Override
+    public GenericResponseV2<List<UserDto>> getUserByLocationId(Long locationId) {
+        try {
+            Location location = Location.builder()
+                    .locationId(locationId)
+                    .build();
+            List<User> users = userRepository.findAllByLocation(location);
+            List<UserDto> response = users.stream().map(userMapper::toDto).toList();
+            return GenericResponseV2.<List<UserDto>>builder()
+                    .status(ResponseStatusEnum.SUCCESS)
+                    .message("users retrieved successfully")
+                    ._embedded(response)
+                    .build();
+        }catch (Exception e){
+            e.printStackTrace();
+            return GenericResponseV2.<List<UserDto>>builder()
+                    .status(ResponseStatusEnum.ERROR)
+                    .message("unable to retrieve users")
+                    ._embedded(null)
+                    .build();
+        }
     }
 
     @Transactional

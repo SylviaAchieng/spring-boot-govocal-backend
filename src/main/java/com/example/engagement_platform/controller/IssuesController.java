@@ -71,4 +71,26 @@ public class IssuesController {
                 return ResponseEntity.badRequest().body(responseV2);
             }
     }
+
+    @GetMapping("/status")
+    public ResponseEntity<GenericResponseV2<List<IssueDto>>> getAllIssuesByStatus(
+            @RequestParam(name = "status")String status
+    ){
+        try {
+            GenericResponseV2<List<IssueDto>> issues = issuesService.getAllIssuesByStatus(status);
+            return new ResponseEntity<>(issues, HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<GenericResponseV2<List<IssueDto>>> getIssueByUserId(@PathVariable Long userId){
+        GenericResponseV2<List<IssueDto>> response = issuesService.getIssueByUserId(userId);
+        if (response.getStatus().equals(ResponseStatusEnum.SUCCESS)){
+            return ResponseEntity.ok().body(response);
+        }else {
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
 }

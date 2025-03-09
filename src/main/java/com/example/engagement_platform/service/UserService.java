@@ -26,4 +26,6 @@ public interface UserService {
     GenericResponseV2<AuthResponseDto> authenticate(AuthRequest request);
 
     void activateAccount(String token) throws MessagingException;
+
+    GenericResponseV2<List<UserDto>> getUserByLocationId(Long locationId);
 }

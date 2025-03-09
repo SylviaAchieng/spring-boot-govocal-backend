@@ -4,10 +4,9 @@ import com.example.engagement_platform.common.GenericResponseV2;
 import com.example.engagement_platform.common.ResponseStatusEnum;
 import com.example.engagement_platform.mappers.ImageMapper;
 import com.example.engagement_platform.mappers.IssueMapper;
-import com.example.engagement_platform.model.Image;
 import com.example.engagement_platform.model.Issue;
 import com.example.engagement_platform.model.Location;
-import com.example.engagement_platform.model.Project;
+import com.example.engagement_platform.model.User;
 import com.example.engagement_platform.model.dto.response.IssueDto;
 import com.example.engagement_platform.repository.ImageRepository;
 import com.example.engagement_platform.repository.IssueRepository;
@@ -18,7 +17,6 @@ import org.springframework.stereotype.Service;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -96,6 +94,50 @@ public class IssueServiceImpl implements IssuesService{
         }
 
 
+    }
+
+    @Override
+    public GenericResponseV2<List<IssueDto>> getAllIssuesByStatus(String status) {
+        try {
+            List<Issue> issueByStatus = issueRepository.findAllByStatus(status);
+            List<IssueDto> response = issueByStatus.stream().map(issueMapper::toDto).toList();
+            return GenericResponseV2.<List<IssueDto>>builder()
+                    .status(ResponseStatusEnum.SUCCESS)
+                    .message("Issues retrieved successfully")
+                    ._embedded(response)
+                    .build();
+        }catch (Exception e){
+            e.printStackTrace();
+            return GenericResponseV2.<List<IssueDto>>builder()
+                    .status(ResponseStatusEnum.ERROR)
+                    .message("Unable to retrieve issues")
+                    ._embedded(null)
+                    .build();
+        }
+    }
+
+    @Override
+    public GenericResponseV2<List<IssueDto>> getIssueByUserId(Long userId) {
+        try {
+            User user = User.builder()
+                    .userId(userId)
+                    .build();
+
+            List<Issue> issues = issueRepository.findAllByUser(user);
+            List<IssueDto> response = issues.stream().map(issueMapper::toDto).toList();
+            return GenericResponseV2.<List<IssueDto>>builder()
+                    .status(ResponseStatusEnum.SUCCESS)
+                    .message("Issue retrieved successfully")
+                    ._embedded(response)
+                    .build();
+        }catch (Exception e){
+            e.printStackTrace();
+            return GenericResponseV2.<List<IssueDto>>builder()
+                    .status(ResponseStatusEnum.ERROR)
+                    .message("Unable to retrieve issue")
+                    ._embedded(null)
+                    .build();
+        }
     }
 
     @Override

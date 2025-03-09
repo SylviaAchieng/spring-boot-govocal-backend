@@ -1,7 +1,6 @@
 package com.example.engagement_platform.service;
 
 import com.example.engagement_platform.common.GenericResponseV2;
-import com.example.engagement_platform.model.Issue;
 import com.example.engagement_platform.model.dto.response.IssueDto;
 
 import java.util.List;
@@ -18,4 +17,8 @@ public interface IssuesService {
     GenericResponseV2<IssueDto> createIssue(IssueDto issueDto);
 
     GenericResponseV2<List<IssueDto>> getIssueByLocationId(Long locationId);
+
+    GenericResponseV2<List<IssueDto>> getAllIssuesByStatus(String status);
+
+    GenericResponseV2<List<IssueDto>> getIssueByUserId(Long userId);
 }

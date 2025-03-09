@@ -2,6 +2,7 @@ package com.example.engagement_platform.repository;
 
 import com.example.engagement_platform.model.Issue;
 import com.example.engagement_platform.model.Location;
+import com.example.engagement_platform.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -15,4 +16,8 @@ public interface IssueRepository extends JpaRepository<Issue, Long> {
     Optional<Issue> findByLocation(Location location);
 
     List<Issue> findAllByLocation(Location location);
+
+    List<Issue> findAllByStatus(String status);
+
+    List<Issue> findAllByUser(User user);
 }

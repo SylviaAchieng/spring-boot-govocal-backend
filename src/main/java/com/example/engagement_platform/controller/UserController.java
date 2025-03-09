@@ -7,6 +7,7 @@ import com.example.engagement_platform.model.Token;
 import com.example.engagement_platform.model.dto.AuthResponseDto;
 import com.example.engagement_platform.model.dto.UserDto;
 import com.example.engagement_platform.model.dto.request.AuthRequest;
+import com.example.engagement_platform.model.dto.response.ProjectsDto;
 import com.example.engagement_platform.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.mail.MessagingException;
@@ -108,5 +109,15 @@ public class UserController {
         }
 
 
+    }
+
+    @GetMapping("/location/{locationId}")
+    public ResponseEntity<GenericResponseV2<List<UserDto>>> getUsersByLocationId(@PathVariable Long locationId){
+        GenericResponseV2<List<UserDto>> response = userService.getUserByLocationId(locationId);
+        if (response.getStatus().equals(ResponseStatusEnum.SUCCESS)){
+            return ResponseEntity.ok().body(response);
+        }else {
+            return ResponseEntity.badRequest().body(response);
+        }
     }
 }

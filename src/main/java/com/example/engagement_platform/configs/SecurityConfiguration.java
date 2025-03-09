@@ -43,8 +43,11 @@ public class SecurityConfiguration {
                                 "api/v1/project-comments/{projectId}",
                                 "/api/v1/events",
                                 "/api/v1/projects",
+                                "/api/v1/projects/active",
                                 "/api/v1/discussions",
-                                "/api/v1/users"
+                                "/api/v1/users",
+                                "/api/v1/issue",
+                                "/api/v1/issue/user/{userId}"
                         )
                         .permitAll()
                         .requestMatchers(

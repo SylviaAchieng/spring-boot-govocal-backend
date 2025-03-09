@@ -9,6 +9,8 @@ import java.util.List;
 public interface ProjectService {
     GenericResponseV2<List<ProjectsDto>> getAllProjects();
 
+    GenericResponseV2<List<ProjectsDto>> getActiveProjects();
+
     GenericResponseV2<ProjectsDto> createProject(ProjectsDto projectsDto);
 
     GenericResponseV2<ProjectsDto> getProjectById(BigDecimal projectId);

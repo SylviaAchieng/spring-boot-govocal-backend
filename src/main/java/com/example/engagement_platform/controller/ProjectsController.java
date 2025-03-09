@@ -31,6 +31,16 @@ public class ProjectsController {
         }
     }
 
+    @GetMapping("/active")
+    public ResponseEntity<GenericResponseV2<List<ProjectsDto>>> getActiveProjects(){
+        GenericResponseV2<List<ProjectsDto>> response = projectService.getActiveProjects();
+        if (response.getStatus().equals(ResponseStatusEnum.SUCCESS)){
+            return ResponseEntity.ok().body(response);
+        }else {
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+
     @Operation(summary = "create project")
     @PostMapping
     public ResponseEntity<GenericResponseV2<ProjectsDto>> createProject(@Valid @RequestBody ProjectsDto projectsDto){

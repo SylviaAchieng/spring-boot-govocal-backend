@@ -85,6 +85,30 @@ public class ProjectServiceImpl implements ProjectService{
     }
 
     @Override
+    public GenericResponseV2<List<ProjectsDto>> getActiveProjects() {
+        try {
+            List<Project> projects = projectRepository.findAll();
+            List<ProjectsDto> response = projects.stream()
+                    .map(projectMapper::toDto)
+                    .peek(this::setRemainingDays) // Set remaining days
+                    .filter(project -> project.getDaysRemaining().compareTo(BigDecimal.ZERO) > 0) // Filter active projects
+                    .toList();
+
+            return GenericResponseV2.<List<ProjectsDto>>builder()
+                    .status(ResponseStatusEnum.SUCCESS)
+                    .message("Active projects retrieved successfully")
+                    ._embedded(response)
+                    .build();
+        } catch (Exception e) {
+            return GenericResponseV2.<List<ProjectsDto>>builder()
+                    .status(ResponseStatusEnum.ERROR)
+                    .message("Failed to retrieve active projects: " + e.getMessage())
+                    .build();
+        }
+    }
+
+
+    @Override
     public GenericResponseV2<ProjectsDto> createProject(ProjectsDto projectsDto) {
         try {
             User user = userRepository.findByUserId(projectsDto.getUser().getUserId()).orElseThrow(() -> new RuntimeException("User not found"));
@@ -97,6 +121,8 @@ public class ProjectServiceImpl implements ProjectService{
                             .locationId(location.getLocationId())
                             .county(location.getCounty())
                     .build());
+            LocalDate endDate = projectsDto.getEndDate();
+            projectsDto.setDaysRemaining(BigDecimal.valueOf(getRemainingDays(endDate)));
             Project projectToBeSaved = projectMapper.toEntity(projectsDto);
             Project savedProject = projectRepository.save(projectToBeSaved);
             ProjectsDto response = projectMapper.toDto(savedProject);
