@@ -1,6 +1,7 @@
 package com.example.engagement_platform.model.dto.response;
 
 
+import com.example.engagement_platform.enums.IssueStatusEnum;
 import com.example.engagement_platform.model.dto.UserDto;
 import com.example.engagement_platform.model.dto.request.ImageDto;
 
@@ -22,7 +23,7 @@ public class IssueDto {
 
     private String description;
 
-    private String status;
+    private IssueStatusEnum status;
 
     private Date createdAt;
 

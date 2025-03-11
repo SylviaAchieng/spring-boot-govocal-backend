@@ -2,6 +2,7 @@ package com.example.engagement_platform.service;
 
 import com.example.engagement_platform.common.GenericResponseV2;
 import com.example.engagement_platform.common.ResponseStatusEnum;
+import com.example.engagement_platform.enums.IssueStatusEnum;
 import com.example.engagement_platform.mappers.ImageMapper;
 import com.example.engagement_platform.mappers.IssueMapper;
 import com.example.engagement_platform.model.Issue;
@@ -188,8 +189,8 @@ public class IssueServiceImpl implements IssuesService{
     public GenericResponseV2<IssueDto> createIssue(IssueDto issueDto) {
         try {
             Issue issueToBeSaved = issueMapper.toEntity(issueDto);
-            //Image savedImage = imageRepository.save(issueToBeSaved.getIssueImage());
-            //issueToBeSaved.setIssueImage(savedImage);
+            IssueStatusEnum status = issueDto.getStatus() !=null ? issueDto.getStatus(): IssueStatusEnum.CREATED;
+            issueToBeSaved.setStatus(status);
             issueToBeSaved.setCreatedAt(Date.valueOf(LocalDate.now()));
             Issue savedIssue = issueRepository.save(issueToBeSaved);
             IssueDto response = issueMapper.toDto(savedIssue);

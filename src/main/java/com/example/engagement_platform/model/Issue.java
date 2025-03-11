@@ -1,5 +1,6 @@
 package com.example.engagement_platform.model;
 
+import com.example.engagement_platform.enums.IssueStatusEnum;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -20,16 +21,14 @@ public class Issue {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long issueId;
 
-    @NotNull(message = "title is mandatory")
-    @NotBlank(message = "title field shld not be empty")
     private String title;
 
-    @NotNull(message = " description is mandatory")
     private String description;
 
-    private String status;
+    @Enumerated(value = EnumType.STRING)
+    private IssueStatusEnum status;
 
-    @NotNull(message = "creation date is mandatory")
+
     private Date createdAt;
 
     @Column(name = "image")
