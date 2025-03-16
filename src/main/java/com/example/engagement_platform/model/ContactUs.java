@@ -26,11 +26,10 @@ public class ContactUs {
     private String message;
     @Column(name = "email")
     private String email;
-
+    @Column(name = "user_type")
+    @Enumerated(value = EnumType.STRING)
+    private UserType userType;
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(referencedColumnName = "location_id", name = "location_id")
     private Location location;
-//    @ManyToOne
-//    @JoinColumn(referencedColumnName = "user_id", name = "user_id")
-//    private User user;
 }

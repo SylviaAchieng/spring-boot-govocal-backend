@@ -38,7 +38,7 @@ public class Issue {
     @JoinColumn(referencedColumnName = "location_id", name = "location_id")
     private Location location;
 
-    @ManyToOne
+    @ManyToOne(optional = true)
     @JoinColumn(referencedColumnName = "user_id", name = "user_id")
     private User user;
 

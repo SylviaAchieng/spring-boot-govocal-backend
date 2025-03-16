@@ -12,11 +12,11 @@ import org.mapstruct.factory.Mappers;
 @DecoratedWith(value = ContactUsMapperDecorator.class)
 public interface ContactUsMapper {
     ContactUsMapper INSTANCE = Mappers.getMapper(ContactUsMapper.class);
-    //@Mapping(source = "user", target = "user", ignore = true)
+    @Mapping(source = "userType", target = "userType", ignore = true)
     @Mapping(source = "location", target = "location", ignore = true)
     ContactUsDto toDto(ContactUs contactUs);
 
-    //@Mapping(source = "user", target = "user", ignore = true)
+    @Mapping(source = "userType", target = "userType", ignore = true)
     @Mapping(source = "location", target = "location", ignore = true)
     ContactUs toEntity(ContactUsDto contactUsDto);
 }

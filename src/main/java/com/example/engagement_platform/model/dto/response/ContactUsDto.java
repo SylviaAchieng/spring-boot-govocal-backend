@@ -1,5 +1,6 @@
 package com.example.engagement_platform.model.dto.response;
 
+import com.example.engagement_platform.model.UserType;
 import com.example.engagement_platform.model.dto.UserDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,5 +20,6 @@ public class ContactUsDto {
     private String message;
     private String email;
     private String fullName;
+    private UserType userType;
     private LocationDto location;
 }

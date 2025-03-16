@@ -38,9 +38,10 @@ public class ContactUsServiceImpl implements ContactUsService{
             String body = "<b>Name:</b> " + contactUsDto.getFullName() + "<br>" +
                     "<b>Email:</b> " + contactUsDto.getEmail() + "<br>" +
                     "<b>Message:</b> " + contactUsDto.getMessage() + "<br>" +
-                    "<b>County:</b> " + location.getCounty();
+                    "<b>County:</b> " + location.getCounty() + "<br>" +
+                    "<b>User Type:</b> " + contactUsDto.getUserType();
 
-            emailService.sendSimpleMessage("admin@yourdomain.com", subject, body);
+            emailService.sendSimpleMessage("achiengsylvia157@gmail.com", subject, body);
             return GenericResponseV2.<ContactUsDto>builder()
                     .status(ResponseStatusEnum.SUCCESS)
                     .message("Message sent successfully")

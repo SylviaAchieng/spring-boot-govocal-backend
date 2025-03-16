@@ -33,7 +33,9 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(request -> request
                         .requestMatchers(
                                 HttpMethod.POST, "/api/v1/users",
-                                "/api/v1/users/auth"
+                                "/api/v1/users/auth",
+                                "/api/v1/contact-us",
+                                "/api/v1/issue"
                         )
                         .permitAll()
                         .requestMatchers(
@@ -47,7 +49,8 @@ public class SecurityConfiguration {
                                 "/api/v1/discussions",
                                 "/api/v1/users",
                                 "/api/v1/issue",
-                                "/api/v1/issue/user/{userId}"
+                                "/api/v1/issue/user/{userId}",
+                                "/api/v1/contact-us"
                         )
                         .permitAll()
                         .requestMatchers(

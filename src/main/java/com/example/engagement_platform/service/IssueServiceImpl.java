@@ -12,12 +12,14 @@ import com.example.engagement_platform.model.dto.response.IssueDto;
 import com.example.engagement_platform.repository.ImageRepository;
 import com.example.engagement_platform.repository.IssueRepository;
 import com.example.engagement_platform.repository.LocationRepository;
+import com.example.engagement_platform.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +30,7 @@ public class IssueServiceImpl implements IssuesService{
     private final ImageMapper imageMapper;
     private final IssueMapper issueMapper;
     private final ImageRepository imageRepository;
+    private final UserRepository userRepository;
 
 
     @Override
@@ -192,6 +195,15 @@ public class IssueServiceImpl implements IssuesService{
             IssueStatusEnum status = issueDto.getStatus() !=null ? issueDto.getStatus(): IssueStatusEnum.CREATED;
             issueToBeSaved.setStatus(status);
             issueToBeSaved.setCreatedAt(Date.valueOf(LocalDate.now()));
+
+            // Check if user exists before setting it
+            if (issueDto.getUser() != null && issueDto.getUser().getUserId() != null) {
+                Optional<User> userOpt = userRepository.findByUserId(issueDto.getUser().getUserId());
+                issueToBeSaved.setUser(userOpt.orElse(null)); // Assign user if found, else keep null for anonymous
+            } else {
+                issueToBeSaved.setUser(null);
+            }
+
             Issue savedIssue = issueRepository.save(issueToBeSaved);
             IssueDto response = issueMapper.toDto(savedIssue);
             return GenericResponseV2.<IssueDto>builder()
