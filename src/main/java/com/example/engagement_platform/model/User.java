@@ -10,6 +10,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.security.auth.Subject;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.security.Principal;
 import java.util.Collection;
@@ -47,6 +48,9 @@ public class User implements UserDetails, Principal {
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(referencedColumnName = "location_id", name = "location_id")
     private Location location;
+
+    @Column(name = "phone_number")
+    private BigDecimal phoneNumber;
 
     @Override
     public String getName() {
