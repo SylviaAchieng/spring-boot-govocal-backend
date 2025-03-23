@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -91,7 +92,8 @@ public class ProjectServiceImpl implements ProjectService{
             List<ProjectsDto> response = projects.stream()
                     .map(projectMapper::toDto)
                     .peek(this::setRemainingDays) // Set remaining days
-                    .filter(project -> project.getDaysRemaining().compareTo(BigDecimal.ZERO) > 0) // Filter active projects
+                    .filter(project -> project.getDaysRemaining().compareTo(BigDecimal.ZERO) > 0)
+                    .sorted(Comparator.comparing(ProjectsDto::getDaysRemaining).reversed())
                     .toList();
 
             return GenericResponseV2.<List<ProjectsDto>>builder()
@@ -189,7 +191,7 @@ public class ProjectServiceImpl implements ProjectService{
     }
 
     @Override
-    public GenericResponseV2<Boolean> updateEventById(ProjectsDto projectsDto, BigDecimal projectId) {
+    public GenericResponseV2<Boolean> updateProjectById(ProjectsDto projectsDto, BigDecimal projectId) {
         try {
             Project projectToSave = projectMapper.toEntity(projectsDto);
             Project savedProject = projectRepository.save(projectToSave);

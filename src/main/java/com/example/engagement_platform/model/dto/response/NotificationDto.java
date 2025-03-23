@@ -12,6 +12,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Date;
+import java.time.LocalDate;
 
 @Data
 @Builder
@@ -24,7 +25,7 @@ public class NotificationDto {
 
     private String description;
 
-    private Date sentAt;
+    private LocalDate sentAt;
 
     private String status;
 

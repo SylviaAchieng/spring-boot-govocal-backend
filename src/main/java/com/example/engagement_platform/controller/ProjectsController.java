@@ -78,8 +78,8 @@ public class ProjectsController {
 
     @Operation(summary = "update project by id")
     @PutMapping("/{projectId}")
-    public ResponseEntity<GenericResponseV2<Boolean>> updateEventById(@Valid @RequestBody ProjectsDto projectsDto, @PathVariable BigDecimal projectId){
-        GenericResponseV2<Boolean> response = projectService.updateEventById(projectsDto,projectId);
+    public ResponseEntity<GenericResponseV2<Boolean>> updateProjectById(@Valid @RequestBody ProjectsDto projectsDto, @PathVariable BigDecimal projectId){
+        GenericResponseV2<Boolean> response = projectService.updateProjectById(projectsDto,projectId);
         if (response.getStatus().equals(ResponseStatusEnum.SUCCESS)){
             return ResponseEntity.ok().body(response);
         }else {

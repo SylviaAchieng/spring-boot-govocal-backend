@@ -23,15 +23,6 @@ public class ContactUsMapperDecorator implements ContactUsMapper{
     @Override
     public ContactUsDto toDto(ContactUs contactUs) {
         ContactUsDto mappedDto = contactUsMapper.toDto(contactUs);
-//        User user = contactUs.getUser();
-//        if (user != null){
-//            mappedDto.setUser(UserDto.builder()
-//                    .userId(user.getUserId())
-//                    .fullName(user.getFullName())
-//                    .email(user.getEmail())
-//                    .userType(user.getUserType())
-//                    .build());
-//        }
         // custom mapping for location
         Location location = contactUs.getLocation();
         if (location != null){
@@ -48,15 +39,6 @@ public class ContactUsMapperDecorator implements ContactUsMapper{
     @Override
     public ContactUs toEntity(ContactUsDto contactUsDto) {
         ContactUs mappedEntity = contactUsMapper.toEntity(contactUsDto);
-//        UserDto userDto = contactUsDto.getUser();
-//        if (userDto!=null){
-//            Long userId = userDto.getUserId();
-//            User user = userRepository.findByUserId(userId)
-//                    .orElse(User.builder()
-//                            .userId(userId)
-//                            .build());
-//            mappedEntity.setUser(user);
-//        }
 
         LocationDto locationDto = contactUsDto.getLocation();
         if (locationDto!=null){

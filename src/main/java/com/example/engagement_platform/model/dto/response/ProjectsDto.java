@@ -26,5 +26,6 @@ public class ProjectsDto {
     private BigDecimal actualCost;
     private LocalDate startDate;
     private LocalDate endDate;
+    private String base64Encoded;
 
 }

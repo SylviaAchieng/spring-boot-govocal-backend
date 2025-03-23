@@ -17,7 +17,7 @@ public interface ProjectService {
 
     GenericResponseV2<Boolean> deleteProjectById(BigDecimal projectId);
 
-    GenericResponseV2<Boolean> updateEventById(ProjectsDto projectsDto, BigDecimal projectId);
+    GenericResponseV2<Boolean> updateProjectById(ProjectsDto projectsDto, BigDecimal projectId);
 
     GenericResponseV2<List<ProjectsDto>> getProjectByLocationId(Long locationId);
 }

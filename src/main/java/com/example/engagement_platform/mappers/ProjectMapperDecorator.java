@@ -51,6 +51,11 @@ public class ProjectMapperDecorator implements ProjectMapper{
         if (image!=null && (image.length>0)){
             mappedDto.setBase64EncodedImage(Base64.getEncoder().encodeToString(image));
         }
+        byte[] receipts = project.getReceipts();
+        if (receipts!=null && (receipts.length>0)){
+            mappedDto.setBase64Encoded(Base64.getEncoder().encodeToString(receipts));
+        }
+
         mappedDto.setStartDate(project.getStartDate());
         mappedDto.setEndDate(project.getEndDate());
         return mappedDto;
@@ -83,6 +88,11 @@ public class ProjectMapperDecorator implements ProjectMapper{
         String base64EncodedImage = projectsDto.getBase64EncodedImage();
         if (base64EncodedImage!=null && !base64EncodedImage.isEmpty()){
             mappedEntity.setImage(Base64.getDecoder().decode(base64EncodedImage));
+        }
+
+        String base64Encoded = projectsDto.getBase64Encoded();
+        if (base64Encoded!=null && !base64Encoded.isEmpty()){
+            mappedEntity.setReceipts(Base64.getDecoder().decode(base64Encoded));
         }
 
         return mappedEntity;

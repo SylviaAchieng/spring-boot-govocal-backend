@@ -12,10 +12,12 @@ public interface ProjectMapper {
     @Mapping(source = "user", target = "user", ignore = true)
     @Mapping(source = "location", target = "location", ignore = true)
     @Mapping(source = "image", target = "base64EncodedImage",ignore = true)
+    @Mapping(source = "receipts", target = "base64Encoded",ignore = true)
     ProjectsDto toDto(Project project);
 
     @Mapping(source = "user", target = "user", ignore = true)
     @Mapping(source = "location", target = "location", ignore = true)
     @Mapping(source = "base64EncodedImage", target = "image",ignore = true)
+    @Mapping(source = "base64Encoded", target = "receipts",ignore = true)
     Project toEntity(ProjectsDto projectsDto);
 }

@@ -54,4 +54,6 @@ public class Project {
     private LocalDate startDate;
     @Column(name = "end_date")
     private LocalDate endDate;
+    @Column(name = "receipts")
+    private byte[] receipts;
 }

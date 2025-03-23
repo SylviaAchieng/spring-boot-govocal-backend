@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigInteger;
 import java.sql.Date;
+import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
@@ -29,7 +30,7 @@ public class Notification {
     @NotBlank(message = "Description field shld not be empty")
     private String description;
 
-    private Date sentAt;
+    private LocalDate sentAt;
 
     @NotNull(message = "status  is mandatory")
     @NotBlank(message = "status field shld not be empty")

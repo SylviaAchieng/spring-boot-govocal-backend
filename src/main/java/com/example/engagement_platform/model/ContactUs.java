@@ -26,6 +26,8 @@ public class ContactUs {
     private String message;
     @Column(name = "email")
     private String email;
+    @Column(name = "full_name")
+    private String fullName;
     @Column(name = "user_type")
     @Enumerated(value = EnumType.STRING)
     private UserType userType;

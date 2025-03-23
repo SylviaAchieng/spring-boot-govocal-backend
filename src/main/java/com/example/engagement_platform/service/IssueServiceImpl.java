@@ -9,6 +9,7 @@ import com.example.engagement_platform.model.Issue;
 import com.example.engagement_platform.model.Location;
 import com.example.engagement_platform.model.User;
 import com.example.engagement_platform.model.dto.response.IssueDto;
+import com.example.engagement_platform.model.dto.response.NotificationDto;
 import com.example.engagement_platform.repository.ImageRepository;
 import com.example.engagement_platform.repository.IssueRepository;
 import com.example.engagement_platform.repository.LocationRepository;
@@ -31,6 +32,7 @@ public class IssueServiceImpl implements IssuesService{
     private final IssueMapper issueMapper;
     private final ImageRepository imageRepository;
     private final UserRepository userRepository;
+    private final NotificationService notificationService;
 
 
     @Override
@@ -171,6 +173,11 @@ public class IssueServiceImpl implements IssuesService{
             issueToSave.setCreatedAt(Date.valueOf(LocalDate.now()));
             Issue savedIssue = issueRepository.save(issueToSave);
             issueMapper.toDto(savedIssue);
+            NotificationDto notificationDto = new NotificationDto();
+            notificationDto.setType("Issues");
+            notificationDto.setDescription("Your concern is being looked into");
+            notificationDto.setSentAt(LocalDate.now());
+            notificationService.createNotification(notificationDto);
             return GenericResponseV2.<Boolean>builder()
                     .status(ResponseStatusEnum.SUCCESS)
                     .message("Issue updated successfully")
