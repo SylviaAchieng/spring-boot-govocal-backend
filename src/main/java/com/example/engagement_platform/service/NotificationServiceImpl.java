@@ -1,16 +1,22 @@
 package com.example.engagement_platform.service;
 
 import com.example.engagement_platform.common.GenericResponseV2;
+import com.example.engagement_platform.common.GenericResponseV3;
 import com.example.engagement_platform.common.ResponseStatusEnum;
+import com.example.engagement_platform.enums.NotificationStatusEnum;
 import com.example.engagement_platform.mappers.NotificationMapper;
 import com.example.engagement_platform.model.Notification;
 import com.example.engagement_platform.model.dto.response.NotificationDto;
+import com.example.engagement_platform.model.dto.response.NotificationStats;
 import com.example.engagement_platform.repository.NotificationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -122,5 +128,50 @@ public class NotificationServiceImpl implements NotificationService{
                     .build();
         }
         }
+
+    private static NotificationStats getNotificationStats(List<NotificationDto> notifications) {
+        // get the stats
+        Map<NotificationStatusEnum, List<NotificationDto>> groupedByStatus = notifications
+                .stream()
+                .collect(Collectors.groupingBy(NotificationDto::getStatus));
+
+        NotificationStats stat = NotificationStats.builder().statusCounts(new HashMap<>()).build();
+        groupedByStatus.forEach((notificationStatusEnum, notificationDto) -> stat.getStatusCounts().put(notificationStatusEnum, notificationDto.size()));
+
+        Arrays.stream(NotificationStatusEnum.values()) // [CREATE, COMPLETED, CANCELLED, ...]
+                .forEach(notificationStatusEnum -> {
+                    if (!stat.getStatusCounts().containsKey(notificationStatusEnum)) { // if status not account for, default to 0
+                        stat.getStatusCounts().put(notificationStatusEnum, 0);
+                    }
+                });
+        return stat;
+    }
+
+    @Override
+    public GenericResponseV2<List<NotificationDto>> getAllNotificationsByUserId() {
+        return null;
+    }
+
+    @Override
+    public GenericResponseV3<List<NotificationDto>, NotificationStats> getAllNotificationsByLocationId(Long locationId) {
+        try {
+            List<Notification> notifications = notificationRepository.findAllByLocationId(locationId);
+            List<NotificationDto> response = notifications.stream().map(notificationMapper::toDto).toList();
+            NotificationStats stat = getNotificationStats(response);
+            return GenericResponseV3.<List<NotificationDto>, NotificationStats>builder()
+                    .status(ResponseStatusEnum.SUCCESS)
+                    .message("notifications retrieved successfully")
+                    ._embedded(response)
+                    .metadata(stat)
+                    .build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return GenericResponseV3.<List<NotificationDto>, NotificationStats>builder()
+                    .status(ResponseStatusEnum.ERROR)
+                    .message("unable to retrieve notifications")
+                    ._embedded(null)
+                    .build();
+        }
+    }
 
 }

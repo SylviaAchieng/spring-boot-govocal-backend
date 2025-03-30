@@ -4,23 +4,24 @@ import com.example.engagement_platform.common.GenericResponseV2;
 import com.example.engagement_platform.common.GenericResponseV3;
 import com.example.engagement_platform.common.ResponseStatusEnum;
 import com.example.engagement_platform.enums.IssueStatusEnum;
+import com.example.engagement_platform.enums.NotificationStatusEnum;
 import com.example.engagement_platform.mappers.ImageMapper;
 import com.example.engagement_platform.mappers.IssueMapper;
 import com.example.engagement_platform.model.Issue;
 import com.example.engagement_platform.model.Location;
+import com.example.engagement_platform.model.Notification;
 import com.example.engagement_platform.model.User;
 import com.example.engagement_platform.model.dto.response.IssueDto;
 import com.example.engagement_platform.model.dto.response.IssueStats;
 import com.example.engagement_platform.model.dto.response.NotificationDto;
-import com.example.engagement_platform.repository.ImageRepository;
-import com.example.engagement_platform.repository.IssueRepository;
-import com.example.engagement_platform.repository.LocationRepository;
-import com.example.engagement_platform.repository.UserRepository;
+import com.example.engagement_platform.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -35,6 +36,7 @@ public class IssueServiceImpl implements IssuesService{
     private final ImageRepository imageRepository;
     private final UserRepository userRepository;
     private final NotificationService notificationService;
+    private final NotificationRepository notificationRepository;
 
 
     @Override
@@ -200,11 +202,29 @@ public class IssueServiceImpl implements IssuesService{
             issueToSave.setCreatedAt(Date.valueOf(LocalDate.now()));
             Issue savedIssue = issueRepository.save(issueToSave);
             issueMapper.toDto(savedIssue);
-            NotificationDto notificationDto = new NotificationDto();
-            notificationDto.setType("Issues");
-            notificationDto.setDescription("Your concern is being looked into");
-            notificationDto.setSentAt(LocalDate.now());
-            notificationService.createNotification(notificationDto);
+
+            if (issueDto.getNotificationId() != null) {
+                Optional<Notification> optionalNotification = notificationRepository.findById(issueDto.getNotificationId());
+
+                if (optionalNotification.isPresent()) {
+                    // Update the existing notification
+                    Notification existingNotification = optionalNotification.get();
+                    existingNotification.setDescription("Issue update alert!");
+                    existingNotification.setType(issueDto.getStatus().name());
+                    existingNotification.setSentAt(Timestamp.valueOf(LocalDateTime.now()));
+                    existingNotification.setStatus(NotificationStatusEnum.SENT);
+                    notificationRepository.save(existingNotification);
+                }
+            } else {
+                // Create a new notification if none exists
+                NotificationDto notificationDto = new NotificationDto();
+                notificationDto.setType(issueDto.getStatus().name());
+                notificationDto.setDescription("Issue update alert!");
+                notificationDto.setStatus(NotificationStatusEnum.SENT);
+                notificationDto.setSentAt(Timestamp.valueOf(LocalDateTime.now()));
+                notificationService.createNotification(notificationDto);
+            }
+
             return GenericResponseV2.<Boolean>builder()
                     .status(ResponseStatusEnum.SUCCESS)
                     .message("Issue updated successfully")
@@ -240,6 +260,17 @@ public class IssueServiceImpl implements IssuesService{
 
             Issue savedIssue = issueRepository.save(issueToBeSaved);
             IssueDto response = issueMapper.toDto(savedIssue);
+            NotificationDto notificationDto = new NotificationDto();
+            notificationDto.setDescription("New issue alert");
+            notificationDto.setSentAt(Timestamp.valueOf(LocalDateTime.now()));
+            notificationDto.setType(IssueStatusEnum.CREATED.name());
+            notificationDto.setStatus(NotificationStatusEnum.SENT);
+            User user = savedIssue.getUser();
+            if (user != null) {
+                notificationDto.setUserId(user.getUserId());
+                notificationDto.setLocationId(user.getLocation().getLocationId());
+            }
+            notificationService.createNotification(notificationDto);
             return GenericResponseV2.<IssueDto>builder()
                     .status(ResponseStatusEnum.SUCCESS)
                     .message("Successfully created an issue")

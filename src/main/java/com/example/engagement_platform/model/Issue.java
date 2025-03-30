@@ -2,8 +2,6 @@ package com.example.engagement_platform.model;
 
 import com.example.engagement_platform.enums.IssueStatusEnum;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -41,5 +39,7 @@ public class Issue {
     @ManyToOne(optional = true)
     @JoinColumn(referencedColumnName = "user_id", name = "user_id")
     private User user;
+    @Column(name = "notification_id")
+    private Long notificationId;
 
 }

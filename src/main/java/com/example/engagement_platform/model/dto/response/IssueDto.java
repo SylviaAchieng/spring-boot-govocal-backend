@@ -3,8 +3,6 @@ package com.example.engagement_platform.model.dto.response;
 
 import com.example.engagement_platform.enums.IssueStatusEnum;
 import com.example.engagement_platform.model.dto.UserDto;
-import com.example.engagement_platform.model.dto.request.ImageDto;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -34,4 +32,6 @@ public class IssueDto {
     private LocationDto location;
 
     private UserDto user;
+
+    private Long notificationId;
 }

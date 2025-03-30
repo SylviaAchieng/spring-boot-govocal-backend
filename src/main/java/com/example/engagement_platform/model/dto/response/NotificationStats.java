@@ -6,25 +6,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Timestamp;
+import java.util.Map;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class NotificationDto {
-    private Long notificationId;
-
-    private String type;
-
-    private String description;
-
-    private Timestamp sentAt;
-
-    private NotificationStatusEnum status;
-
-    private Long userId;
-
-    private Long locationId;
-
+public class NotificationStats {
+    private Map<NotificationStatusEnum, Integer> statusCounts;
 }

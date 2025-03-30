@@ -1,14 +1,14 @@
 package com.example.engagement_platform.controller;
 
 import com.example.engagement_platform.common.GenericResponseV2;
+import com.example.engagement_platform.common.GenericResponseV3;
 import com.example.engagement_platform.common.ResponseStatusEnum;
-import com.example.engagement_platform.model.Notification;
 import com.example.engagement_platform.model.dto.response.NotificationDto;
+import com.example.engagement_platform.model.dto.response.NotificationStats;
 import com.example.engagement_platform.service.NotificationService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -73,6 +73,16 @@ public class NotificationController {
             return ResponseEntity.ok().body(responseV2);
         }else {
             return ResponseEntity.badRequest().body(responseV2);
+        }
+    }
+
+    @GetMapping("/location/{locationId}")
+    public ResponseEntity<GenericResponseV3<List<NotificationDto>, NotificationStats>> getAllNotificationsByLocationId(@PathVariable Long locationId) {
+        GenericResponseV3<List<NotificationDto>, NotificationStats> response = notificationService.getAllNotificationsByLocationId(locationId);
+        if (response.getStatus().equals(ResponseStatusEnum.SUCCESS)) {
+            return ResponseEntity.ok().body(response);
+        } else {
+            return ResponseEntity.badRequest().body(response);
         }
     }
 }

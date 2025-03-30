@@ -6,9 +6,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigInteger;
-import java.util.List;
-
 @Data
 @Builder
 @AllArgsConstructor
@@ -19,7 +16,6 @@ public class Location {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    //@SequenceGenerator(name="location_seq",sequenceName="location_seq", allocationSize=1)
     @Column(name = "location_id")
     private Long locationId;
 
