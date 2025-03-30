@@ -6,7 +6,6 @@ import com.example.engagement_platform.model.Project;
 import com.example.engagement_platform.model.ProjectComments;
 import com.example.engagement_platform.model.User;
 import com.example.engagement_platform.model.dto.response.ProjectCommentDto;
-import com.example.engagement_platform.model.dto.response.ProjectLikesDto;
 import com.example.engagement_platform.repository.ProjectCommentRepository;
 import com.example.engagement_platform.repository.ProjectRepository;
 import com.example.engagement_platform.repository.UserRepository;
@@ -62,7 +61,7 @@ public class ProjectCommentServiceImpl implements ProjectCommentService{
                             .id(item.getId())
                             .projectId(item.getProject().getProjectId())
                             .userId(item.getUser().getUserId())
-                            .createdAt(LocalDateTime.now())
+                            .createdAt(item.getCreatedAt())
                             .comment(item.getComment())
                             .build()).toList();
             return GenericResponseV2.<List<ProjectCommentDto>>builder()

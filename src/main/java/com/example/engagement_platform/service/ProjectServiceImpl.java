@@ -13,7 +13,6 @@ import com.example.engagement_platform.repository.LocationRepository;
 import com.example.engagement_platform.repository.ProjectRepository;
 import com.example.engagement_platform.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -58,7 +57,8 @@ public class ProjectServiceImpl implements ProjectService{
             List<Project> projects = projectRepository.findAll();
             List<ProjectsDto> response = projects.stream()
                     .map(projectMapper::toDto)
-                    .peek(this::setRemainingDays) // Set remaining days
+                    .peek(this::setRemainingDays)
+                    .sorted(Comparator.comparing(ProjectsDto::getDaysRemaining).reversed())
                     .toList();
 
             return GenericResponseV2.<List<ProjectsDto>>builder()

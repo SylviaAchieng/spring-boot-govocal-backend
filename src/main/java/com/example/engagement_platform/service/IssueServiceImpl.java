@@ -1,6 +1,7 @@
 package com.example.engagement_platform.service;
 
 import com.example.engagement_platform.common.GenericResponseV2;
+import com.example.engagement_platform.common.GenericResponseV3;
 import com.example.engagement_platform.common.ResponseStatusEnum;
 import com.example.engagement_platform.enums.IssueStatusEnum;
 import com.example.engagement_platform.mappers.ImageMapper;
@@ -9,6 +10,7 @@ import com.example.engagement_platform.model.Issue;
 import com.example.engagement_platform.model.Location;
 import com.example.engagement_platform.model.User;
 import com.example.engagement_platform.model.dto.response.IssueDto;
+import com.example.engagement_platform.model.dto.response.IssueStats;
 import com.example.engagement_platform.model.dto.response.NotificationDto;
 import com.example.engagement_platform.repository.ImageRepository;
 import com.example.engagement_platform.repository.IssueRepository;
@@ -19,8 +21,8 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -102,10 +104,31 @@ public class IssueServiceImpl implements IssuesService{
 
     }
 
+    private static IssueStats getIssueStats(List<IssueDto> issues) {
+        // get the stats
+        Map<IssueStatusEnum, List<IssueDto>> groupedByStatus = issues
+                .stream()
+                .collect(Collectors.groupingBy(IssueDto::getStatus));
+
+        IssueStats stat = IssueStats.builder().statusCount(new HashMap<>()).build();
+        groupedByStatus.forEach((issueStatusEnum, issueDtos) -> stat.getStatusCount().put(issueStatusEnum, issueDtos.size()));
+
+        Arrays.stream(IssueStatusEnum.values()) // [CREATE, COMPLETED, CANCELLED, ...]
+                .forEach(issueStatusEnum -> {
+                    if (!stat.getStatusCount().containsKey(issueStatusEnum)) { // if status not account for, default to 0
+                        stat.getStatusCount().put(issueStatusEnum, 0);
+                    }
+                });
+        return stat;
+    }
+
     @Override
-    public GenericResponseV2<List<IssueDto>> getAllIssuesByStatus(String status) {
+    public GenericResponseV2<List<IssueDto>> getAllIssuesByStatus(IssueStatusEnum status, Long userId) {
         try {
-            List<Issue> issueByStatus = issueRepository.findAllByStatus(status);
+            User user = User.builder()
+                    .userId(userId)
+                    .build();
+            List<Issue> issueByStatus = issueRepository.findAllByStatusAndUser(status, user);
             List<IssueDto> response = issueByStatus.stream().map(issueMapper::toDto).toList();
             return GenericResponseV2.<List<IssueDto>>builder()
                     .status(ResponseStatusEnum.SUCCESS)
@@ -123,7 +146,7 @@ public class IssueServiceImpl implements IssuesService{
     }
 
     @Override
-    public GenericResponseV2<List<IssueDto>> getIssueByUserId(Long userId) {
+    public GenericResponseV3<List<IssueDto>, IssueStats> getIssueByUserId(Long userId) {
         try {
             User user = User.builder()
                     .userId(userId)
@@ -131,14 +154,18 @@ public class IssueServiceImpl implements IssuesService{
 
             List<Issue> issues = issueRepository.findAllByUser(user);
             List<IssueDto> response = issues.stream().map(issueMapper::toDto).toList();
-            return GenericResponseV2.<List<IssueDto>>builder()
+
+            IssueStats stat = getIssueStats(response);
+
+            return GenericResponseV3.<List<IssueDto>, IssueStats>builder()
                     .status(ResponseStatusEnum.SUCCESS)
                     .message("Issue retrieved successfully")
+                    .metadata(stat) // adding the metadata
                     ._embedded(response)
                     .build();
         }catch (Exception e){
             e.printStackTrace();
-            return GenericResponseV2.<List<IssueDto>>builder()
+            return GenericResponseV3.<List<IssueDto>, IssueStats>builder()
                     .status(ResponseStatusEnum.ERROR)
                     .message("Unable to retrieve issue")
                     ._embedded(null)

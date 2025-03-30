@@ -1,9 +1,11 @@
 package com.example.engagement_platform.controller;
 
 import com.example.engagement_platform.common.GenericResponseV2;
+import com.example.engagement_platform.common.GenericResponseV3;
 import com.example.engagement_platform.common.ResponseStatusEnum;
-import com.example.engagement_platform.model.Issue;
+import com.example.engagement_platform.enums.IssueStatusEnum;
 import com.example.engagement_platform.model.dto.response.IssueDto;
+import com.example.engagement_platform.model.dto.response.IssueStats;
 import com.example.engagement_platform.service.IssuesService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -74,10 +76,11 @@ public class IssuesController {
 
     @GetMapping("/status")
     public ResponseEntity<GenericResponseV2<List<IssueDto>>> getAllIssuesByStatus(
-            @RequestParam(name = "status")String status
+            @RequestParam(name = "status") IssueStatusEnum status,
+            @RequestParam(name = "user") Long userId
     ){
         try {
-            GenericResponseV2<List<IssueDto>> issues = issuesService.getAllIssuesByStatus(status);
+            GenericResponseV2<List<IssueDto>> issues = issuesService.getAllIssuesByStatus(status, userId);
             return new ResponseEntity<>(issues, HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -85,8 +88,8 @@ public class IssuesController {
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<GenericResponseV2<List<IssueDto>>> getIssueByUserId(@PathVariable Long userId){
-        GenericResponseV2<List<IssueDto>> response = issuesService.getIssueByUserId(userId);
+    public ResponseEntity<GenericResponseV3<List<IssueDto>, IssueStats>> getIssueByUserId(@PathVariable Long userId) {
+        GenericResponseV3<List<IssueDto>, IssueStats> response = issuesService.getIssueByUserId(userId);
         if (response.getStatus().equals(ResponseStatusEnum.SUCCESS)){
             return ResponseEntity.ok().body(response);
         }else {
