@@ -26,18 +26,20 @@ public class NotificationServiceImpl implements NotificationService{
     private final NotificationMapper notificationMapper;
 
     @Override
-    public GenericResponseV2<List<NotificationDto>> getAllNotifications() {
+    public GenericResponseV3<List<NotificationDto>, NotificationStats> getAllNotifications() {
         try {
             List<Notification> notifications =  notificationRepository.findAll();
             List<NotificationDto> response = notifications.stream().map(notificationMapper::toDto).toList();
-            return GenericResponseV2.<List<NotificationDto>>builder()
+            NotificationStats stat = getNotificationStats(response);
+            return GenericResponseV3.<List<NotificationDto>, NotificationStats>builder()
                     .status(ResponseStatusEnum.SUCCESS)
                     .message("Notifications retrieved successfully")
                     ._embedded(response)
+                    .metadata(stat)
                     .build();
         }catch (Exception e){
             e.printStackTrace();
-            return GenericResponseV2.<List<NotificationDto>>builder()
+            return GenericResponseV3.<List<NotificationDto>, NotificationStats>builder()
                     .status(ResponseStatusEnum.ERROR)
                     .message("Unable to retrieve successfully")
                     ._embedded(null)
@@ -71,6 +73,9 @@ public class NotificationServiceImpl implements NotificationService{
         try {
             Notification notificationFromDb = notificationRepository.findByNotificationId(notificationId)
                     .orElseThrow(() -> new RuntimeException("Notification not found"));
+            notificationFromDb.setStatus(NotificationStatusEnum.READ);
+            notificationRepository.save(notificationFromDb);
+
             NotificationDto response = notificationMapper.toDto(notificationFromDb);
             return GenericResponseV2.<NotificationDto>builder()
                     .status(ResponseStatusEnum.SUCCESS)
@@ -173,5 +178,37 @@ public class NotificationServiceImpl implements NotificationService{
                     .build();
         }
     }
+
+    @Override
+    public GenericResponseV3<String, Void> markAllNotificationsAsRead() {
+        try {
+            List<Notification> notifications = notificationRepository.findByStatus(NotificationStatusEnum.SENT);
+
+            if (notifications.isEmpty()) {
+                return GenericResponseV3.<String, Void>builder()
+                        .status(ResponseStatusEnum.SUCCESS)
+                        .message("No new notifications to mark as read.")
+                        ._embedded("No notifications updated")
+                        .build();
+            }
+
+            notifications.forEach(notification -> notification.setStatus(NotificationStatusEnum.READ));
+            notificationRepository.saveAll(notifications);
+
+            return GenericResponseV3.<String, Void>builder()
+                    .status(ResponseStatusEnum.SUCCESS)
+                    .message("All notifications marked as read successfully")
+                    ._embedded("Notifications updated successfully")
+                    .build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return GenericResponseV3.<String, Void>builder()
+                    .status(ResponseStatusEnum.ERROR)
+                    .message("Failed to update notifications")
+                    ._embedded(null)
+                    .build();
+        }
+    }
+
 
 }

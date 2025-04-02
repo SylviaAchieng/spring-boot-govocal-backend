@@ -8,7 +8,7 @@ import com.example.engagement_platform.model.dto.response.NotificationStats;
 import java.util.List;
 
 public interface NotificationService {
-    GenericResponseV2<List<NotificationDto>> getAllNotifications();
+    GenericResponseV3<List<NotificationDto>, NotificationStats> getAllNotifications();
 
     GenericResponseV2<NotificationDto> createNotification(NotificationDto notificationDto);
 
@@ -21,5 +21,7 @@ public interface NotificationService {
     GenericResponseV2<List<NotificationDto>> getAllNotificationsByUserId();
 
     GenericResponseV3<List<NotificationDto>, NotificationStats> getAllNotificationsByLocationId(Long locationId);
+
+    GenericResponseV3<String, Void> markAllNotificationsAsRead();
 
 }

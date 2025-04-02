@@ -16,6 +16,8 @@ import com.example.engagement_platform.model.dto.response.IssueStats;
 import com.example.engagement_platform.model.dto.response.NotificationDto;
 import com.example.engagement_platform.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
@@ -29,6 +31,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class IssueServiceImpl implements IssuesService{
 
+    private static final Logger log = LoggerFactory.getLogger(IssueServiceImpl.class);
     private final IssueRepository issueRepository;
     private final LocationRepository locationRepository;
     private final ImageMapper imageMapper;
@@ -205,6 +208,7 @@ public class IssueServiceImpl implements IssuesService{
 
             if (issueDto.getNotificationId() != null) {
                 Optional<Notification> optionalNotification = notificationRepository.findById(issueDto.getNotificationId());
+                log.info("existing:{}", optionalNotification);
 
                 if (optionalNotification.isPresent()) {
                     // Update the existing notification
@@ -213,6 +217,11 @@ public class IssueServiceImpl implements IssuesService{
                     existingNotification.setType(issueDto.getStatus().name());
                     existingNotification.setSentAt(Timestamp.valueOf(LocalDateTime.now()));
                     existingNotification.setStatus(NotificationStatusEnum.SENT);
+                    User user = savedIssue.getUser();
+                    if (user != null) {
+                        existingNotification.setUserId(user.getUserId());
+                        existingNotification.setLocationId(user.getLocation().getLocationId());
+                    }
                     notificationRepository.save(existingNotification);
                 }
             } else {

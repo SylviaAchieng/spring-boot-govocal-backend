@@ -15,4 +15,6 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
     List<Notification> findAllByLocationId(Long locationId);
 
     Optional<Notification> findTopByTypeAndStatus(String type, NotificationStatusEnum status);
+
+    List<Notification> findByStatus(NotificationStatusEnum notificationStatusEnum);
 }

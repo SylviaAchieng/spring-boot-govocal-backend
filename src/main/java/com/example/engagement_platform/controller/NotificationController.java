@@ -24,8 +24,8 @@ public class NotificationController {
 
     @Operation(summary = "get all notifications")
     @GetMapping
-    public ResponseEntity<GenericResponseV2<List<NotificationDto>>> getAllNotifications(){
-        GenericResponseV2<List<NotificationDto>> response = notificationService.getAllNotifications();
+    public ResponseEntity<GenericResponseV3<List<NotificationDto>, NotificationStats>> getAllNotifications() {
+        GenericResponseV3<List<NotificationDto>, NotificationStats> response = notificationService.getAllNotifications();
         if (response.getStatus().equals(ResponseStatusEnum.SUCCESS)){
             return ResponseEntity.ok().body(response);
         }else {
@@ -79,6 +79,16 @@ public class NotificationController {
     @GetMapping("/location/{locationId}")
     public ResponseEntity<GenericResponseV3<List<NotificationDto>, NotificationStats>> getAllNotificationsByLocationId(@PathVariable Long locationId) {
         GenericResponseV3<List<NotificationDto>, NotificationStats> response = notificationService.getAllNotificationsByLocationId(locationId);
+        if (response.getStatus().equals(ResponseStatusEnum.SUCCESS)) {
+            return ResponseEntity.ok().body(response);
+        } else {
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+
+    @PostMapping("/mark-read")
+    public ResponseEntity<GenericResponseV3<String, Void>> markAllNotificationsAsRead() {
+        GenericResponseV3<String, Void> response = notificationService.markAllNotificationsAsRead();
         if (response.getStatus().equals(ResponseStatusEnum.SUCCESS)) {
             return ResponseEntity.ok().body(response);
         } else {
