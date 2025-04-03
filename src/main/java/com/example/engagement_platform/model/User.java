@@ -9,9 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.security.auth.Subject;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.security.Principal;
 import java.util.Collection;
 import java.util.List;
@@ -38,7 +36,7 @@ public class User implements UserDetails, Principal {
     @Column(name = "passcode")
     private String password;
 
-    @Column(name = "national_id")
+    @Column(name = "national_id", unique = true)
     private Integer nationalId;
 
     @Column(name = "user_type")

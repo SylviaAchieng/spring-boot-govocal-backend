@@ -18,7 +18,7 @@ public interface NotificationService {
 
     GenericResponseV2<Boolean> updateNotificationById(NotificationDto notificationDto, Long notificationId);
 
-    GenericResponseV2<List<NotificationDto>> getAllNotificationsByUserId();
+    GenericResponseV3<List<NotificationDto>, NotificationStats> getAllNotificationsByUserId(Long userId);
 
     GenericResponseV3<List<NotificationDto>, NotificationStats> getAllNotificationsByLocationId(Long locationId);
 

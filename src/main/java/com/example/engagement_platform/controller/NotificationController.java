@@ -86,6 +86,16 @@ public class NotificationController {
         }
     }
 
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<GenericResponseV3<List<NotificationDto>, NotificationStats>> getAllNotificationsByUserId(@PathVariable Long userId) {
+        GenericResponseV3<List<NotificationDto>, NotificationStats> response = notificationService.getAllNotificationsByUserId(userId);
+        if (response.getStatus().equals(ResponseStatusEnum.SUCCESS)) {
+            return ResponseEntity.ok().body(response);
+        } else {
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+
     @PostMapping("/mark-read")
     public ResponseEntity<GenericResponseV3<String, Void>> markAllNotificationsAsRead() {
         GenericResponseV3<String, Void> response = notificationService.markAllNotificationsAsRead();

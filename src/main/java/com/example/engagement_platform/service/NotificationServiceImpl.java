@@ -153,8 +153,25 @@ public class NotificationServiceImpl implements NotificationService{
     }
 
     @Override
-    public GenericResponseV2<List<NotificationDto>> getAllNotificationsByUserId() {
-        return null;
+    public GenericResponseV3<List<NotificationDto>, NotificationStats> getAllNotificationsByUserId(Long userId) {
+        try {
+            List<Notification> notifications = notificationRepository.findAllByUserId(userId);
+            List<NotificationDto> response = notifications.stream().map(notificationMapper::toDto).toList();
+            NotificationStats stat = getNotificationStats(response);
+            return GenericResponseV3.<List<NotificationDto>, NotificationStats>builder()
+                    .status(ResponseStatusEnum.SUCCESS)
+                    .message("notifications retrieved successfully")
+                    ._embedded(response)
+                    .metadata(stat)
+                    .build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return GenericResponseV3.<List<NotificationDto>, NotificationStats>builder()
+                    .status(ResponseStatusEnum.ERROR)
+                    .message("unable to retrieve notifications")
+                    ._embedded(null)
+                    .build();
+        }
     }
 
     @Override
