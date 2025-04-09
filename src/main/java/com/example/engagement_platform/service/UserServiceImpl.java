@@ -19,6 +19,7 @@ import com.example.engagement_platform.repository.UserRepository;
 import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,6 +33,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserServiceImpl implements UserService{
 
     private final UserRepository userRepository;
@@ -157,6 +159,7 @@ public class UserServiceImpl implements UserService{
             String encryptedPassword = passwordEncoder.encode(userToSave.getPassword());
             userToSave.setPassword(encryptedPassword);
             User createdUser = userRepository.save(userToSave);
+            log.info("saving user {}", createdUser);
             if (newUser.getUserType().equals(UserType.PUBLIC_SERVANT)) {
 
                 PublicServantDto publicServant = newUser.getPublicServant();
@@ -174,6 +177,7 @@ public class UserServiceImpl implements UserService{
                     servant.setUser(createdUser);
                     publicServantRepository.save(servant);
                 }
+                log.info("saved successfully");
 
                 String subject = "Welcome to GOVocal – Your Voice Matters!";
 
@@ -183,19 +187,20 @@ public class UserServiceImpl implements UserService{
                         "<p>Welcome to <strong>GOVocal</strong>! We're excited to have you on board as we work together to make civic engagement more accessible and impactful.</p>" +
                         "<p>With GOVocal, you can:</p>" +
                         "<ul>" +
-                        "<li>✅ Raise and track issues directly with government representatives</li>" +
-                        "<li>✅ Participate in discussions and collaborate on community projects</li>" +
-                        "<li>✅ Stay informed about important civic events and updates</li>" +
+                        "<li> Raise and track issues directly with government representatives</li>" +
+                        "<li> Participate in discussions and collaborate on community projects</li>" +
+                        "<li> Stay informed about important civic events and updates</li>" +
                         "</ul>" +
-                        "<p>To get started, log in to your account here: <a href='http://localhost:4200/'>Login</a></p>" +
+                        "<p>To get started, log in to your account here: <a href='http://localhost:4200/login'>Login</a></p>" +
                         "<p>If you have any questions, feel free to reach out. We’re here to ensure your voice is heard!</p>" +
                         "<br>" +
                         "<p>Best regards,</p>" +
                         "<p><strong>The GOVocal Team</strong></p>" +
-                        "<p><a href='[Website Link]'>Visit GOVocal</a> | <a href='mailto:achiengsylvia157@gmail.com'>Contact Support</a></p>" +
+                        "<p><a href='http://localhost:4200/'>Visit GOVocal</a> | <a href='mailto:achiengsylvia157@gmail.com'>Contact Support</a></p>" +
                         "</body></html>";
 
                 emailService.sendEmail(newUser.getEmail(), subject, body, "achiengsylvia157@gmail.com", "GOVocal");
+                log.info("sending email");
 
             }
 
